@@ -70,5 +70,30 @@
             
             }
         }
+
+    }
+
+    /////////////////////////////////////////////////
+    //////////////Fil d'actualité////////////////////
+    ////////////////////////////////////////////////
+    function postfile($texte, $date, $user, $db) {
+    
+        $req = $db->prepare('INSERT INTO filactu (post, heurepost, Utilisateur) VALUES (:post, :heurepost, :Utilisateur)');
+        $req->execute(array(
+            'post' => $texte,
+            'heurepost' => $date,
+            'Utilisateur' => $user
+        ));
+        $req->closeCursor();
+    }
+
+    function afficherfil() {
+        
+        $req = $db->query('SELECT * FROM filactu ORDER BY post, likepost, heurepost, Utilisateur DESC');
+        while ($donnees = $req->fetch())
+        {
+            echo '<p><h4 class="inputFields">'.$donnees['yang'].'</h4><p>';
+        }
+        echo '</th>';
     }
 ?>
