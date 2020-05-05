@@ -4,52 +4,49 @@
     /////////// Creation d'un compte ////////////////////
     ////////////////////////////////////////////////////
 
-    function inscription ( $email, $password, $ipassword, $prenom, $nom, $connexion, $db ){
+    function inscription ( $email, $password, $ipassword, $prenom, $nom, $db ){
 
-        if (isset($connexion)==TRUE){
+        $q = $db -> prepare ("SELECT * FROM utilisateur WHERE email = :email");
+        $q -> execute (['email'=>$email]);
+        $result = $q -> fetch();
 
-            $q = $db -> prepare ("SELECT * FROM utilisateur WHERE email = :email");
-            $q -> execute (['email'=>$email]);
-            $result = $q -> fetch();
+        if ( $result['email'] == $email ){
 
-            if ( $result['email'] == $email ){
-
-                echo "<strong> email deja existant </strong>";
-            }
-
-            else {
-                if ( $ipassword == $password ){
-                    
-                    $i = $db->prepare ("INSERT INTO utilisateur (email,motdepasse,prenom,nom) VALUES (:email,:password,:prenom,:nom)" );
-                    $i -> execute ([
-
-                    'email' => $email,
-                    'password'=>$password,
-                    'prenom'=>$prenom,
-                    'nom'=>$nom
-                    
-                    ]);
-
-                    $t = $db->prepare ("INSERT INTO utilisateur2 (email,motdepasse,prenom,nom) VALUES (:email,:password,:prenom,:nom)" );
-                    $t -> execute ([
-
-                    'email' => $email,
-                    'password'=>$password,
-                    'prenom'=>$prenom,
-                    'nom'=>$nom
-                    
-                    ]);
-
-                    header("Location:connexion.php");
-
-                }
-                else {
-                    echo " Les mots de passe sont incorrect ";
-                }
-            }
-
+            echo "<strong> email deja existant </strong>";
         }
+
+        else {
+            if ( $ipassword == $password ){
+                
+                $i = $db->prepare ("INSERT INTO utilisateur (email,motdepasse,prenom,nom) VALUES (:email,:password,:prenom,:nom)" );
+                $i -> execute ([
+
+                'email' => $email,
+                'password'=>$password,
+                'prenom'=>$prenom,
+                'nom'=>$nom
+                
+                ]);
+
+                $t = $db->prepare ("INSERT INTO utilisateur2 (email,motdepasse,prenom,nom) VALUES (:email,:password,:prenom,:nom)" );
+                $t -> execute ([
+
+                'email' => $email,
+                'password'=>$password,
+                'prenom'=>$prenom,
+                'nom'=>$nom
+                
+                ]);
+
+                header("Location:accueil.php");
+            }
+            else {
+                echo " Les mots de passe sont incorrect ";
+            }
+        }
+
     }
+    
     /////////////////////////////////////////////////////////////////
     /////////////// Connexion d'un compte ///////////////////////////
     /////////////////////////////////////////////////////////////////
