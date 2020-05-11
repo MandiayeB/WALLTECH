@@ -62,7 +62,7 @@
                 $_SESSION['prenom'] = $user['prenom'];
                 $_SESSION['nom'] = $user['nom'];
                 $_SESSION['email'] = $email;
-                header("Location:site.php");
+                header("Location:filactualites.php");
             }
             else {
 
