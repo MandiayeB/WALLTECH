@@ -1,6 +1,7 @@
-<?php session_start();
-include('BDD.php');
-require ('fonctions.php');
+<?php 
+    session_start();
+    include('BDD.php');
+    require ('fonctions.php');
 ?>
 <?php 
 

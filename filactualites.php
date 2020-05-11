@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    include('BDD.php');
+    require ('fonctions.php');
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -54,8 +59,15 @@
                     </div>
                 </div>
 
-                <!-- Modèle publication -->
+                <?php 
+                    if ( isset($_POST['publier']) ) {
 
+                        postfile($_POST['post'], $_SESSION['idut'], $db);
+        
+                    }  
+                ?>
+
+                <!-- Modèle publication -->
                 <div class="col-md-6 gedf-main">
                     <div class="card gedf-card bg-dark text-white">
                         <div class="card-header bg-dark text-white">
@@ -68,12 +80,13 @@
                                 </li>
                             </ul>
                         </div>
+                        <form method = 'POST'>
                         <div class="card-body">
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                                     <div class="form-group">
                                         <label class="sr-only" for="message">post</label>
-                                        <textarea class="form-control" id="message" rows="3" placeholder="What are you thinking?"></textarea>
+                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="What are you thinking?"></textarea>
                                     </div>
     
                                 </div>
@@ -89,15 +102,20 @@
                             </div>
                             <div class="btn-toolbar justify-content-between">
                                 <div class="btn-group">
-                                    <button type="submit" class="btn btn-light">Publier</button>
+                                    <input type="submit" name='publier' class="btn btn-light" value='Publier'>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-    
+
+                    <?php 
+                        afficherfile($db);
+                    ?>
+                    
                     <!-- Post -->
 
-                    <div class="card gedf-card bg-dark text-white">
+                    <!--<div class="card gedf-card bg-dark text-white">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -134,7 +152,7 @@
                             <a href="#" class="card-link"><i class="fa fa-comment"></i> Commenter</a>
                             <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Partager</a>
                         </div>
-                    </div>
+                    </div>-->
 
                 <!-- Exemple de carte -->
 
