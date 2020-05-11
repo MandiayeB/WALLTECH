@@ -1,6 +1,9 @@
-<?php session_start();
-include('BDD.php');
-require ('fonctions.php');
+<?php 
+    session_start();
+    include('BDD.php');
+    require ('fonctions.php');
+?>
+<?php 
 
 if (isset($_POST['inscription'])==TRUE){
 
