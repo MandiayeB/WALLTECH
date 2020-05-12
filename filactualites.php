@@ -59,15 +59,24 @@
                     </div>
                 </div>
 
-                <?php 
-                    if ( isset($_POST['publier']) ) {
+                <?php
 
+                    if ( isset($_POST['publier']) ) {
+                        
                         postfile($_POST['post'], $_SESSION['idut'], $db);
-        
-                    }  
+                    
+                    }
+
+                    if(isset($_POST['pubcom'])) {
+            
+                        commenter($_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil']);
+                    
+                    }
+
                 ?>
 
                 <!-- Modèle publication -->
+                
                 <div class="col-md-6 gedf-main">
                     <div class="card gedf-card bg-dark text-white">
                         <div class="card-header bg-dark text-white">
@@ -110,7 +119,9 @@
                     </div>
 
                     <?php 
-                        afficherfile($db);
+                        
+                    afficherfile($db);
+                        
                     ?>
                     
                     <!-- Post -->
