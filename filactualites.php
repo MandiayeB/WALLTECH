@@ -42,7 +42,7 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body bg-dark text-white">
-                            <div class="h5">@Nom de l'utilisateur</div>
+                            <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
                             <div class="h7 text-muted">Nom complet</div>
                             <div class="h7">Description du profil</div>
                         </div>
@@ -93,7 +93,7 @@
                                 <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                                     <div class="form-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="customFile">
+                                            <input type="file" class="custom-file-input" name= "img" id="customFile">
                                             <label class="custom-file-label" for="customFile">Upload image</label>
                                         </div>
                                     </div>

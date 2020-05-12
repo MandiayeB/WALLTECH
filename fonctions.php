@@ -85,6 +85,8 @@
             'utilisateur' => $user
         ));
         $req->closeCursor();
+        header("Location: publication.php");
+
     }
     //////////////////////////////////////////////////////
     //////////////Fil d'actualité (AFFICHER) /////////////
@@ -94,8 +96,8 @@
         
         //$req = $db->query('SELECT * FROM filactu ORDER BY heurepost DESC');
         $req = $db->query('SELECT * FROM filactu INNER JOIN utilisateur ON filactu.Utilisateur = utilisateur.idUtilisateur ORDER BY heurepost DESC');
-        while ($donnees = $req->fetch())
-        {
+        while ($donnees = $req->fetch()) {
+            
             echo '<div class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
