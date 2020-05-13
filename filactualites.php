@@ -13,13 +13,10 @@
         <link rel="stylesheet" href="filactualites.css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
-  </head>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </head>
     <body>
         <nav class="navbar">
             <a href="#" class="navbar-brand text-white">walltech</a>
@@ -42,7 +39,7 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body bg-dark text-white">
-                            <div class="h5">@Nom de l'utilisateur</div>
+                            <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
                             <div class="h7 text-muted">Nom complet</div>
                             <div class="h7">Description du profil</div>
                         </div>
@@ -59,15 +56,24 @@
                     </div>
                 </div>
 
-                <?php 
-                    if ( isset($_POST['publier']) ) {
+                <?php
 
+                    if ( isset($_POST['publier']) ) {
+                        
                         postfile($_POST['post'], $_SESSION['idut'], $db);
-        
-                    }  
+                    
+                    }
+
+                    if(isset($_POST['pubcom'])) {
+            
+                        commenter($_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil']);
+                    
+                    }
+
                 ?>
 
                 <!-- Modèle publication -->
+                
                 <div class="col-md-6 gedf-main">
                     <div class="card gedf-card bg-dark text-white">
                         <div class="card-header bg-dark text-white">
@@ -93,7 +99,7 @@
                                 <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                                     <div class="form-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="customFile">
+                                            <input type="file" class="custom-file-input" name= "img" id="customFile">
                                             <label class="custom-file-label" for="customFile">Upload image</label>
                                         </div>
                                     </div>
@@ -110,7 +116,9 @@
                     </div>
 
                     <?php 
-                        afficherfile($db);
+                        
+                    afficherfile($db);
+                        
                     ?>
                     
                     <!-- Post -->

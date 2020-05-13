@@ -85,17 +85,48 @@
             'utilisateur' => $user
         ));
         $req->closeCursor();
+        header("Location: publication.php");
+
     }
+
+    //////////////////////////////////////////////////////
+    //////////////Fil d'actualité (COMMENTER) ////////////
+    /////////////////////////////////////////////////////
+
+    function commenter($com, $user, $db, $idFil) {
+
+        $req = $db->prepare('INSERT INTO commentaires (Utilisateur, filactu, com) VALUES (:utilisateur, :filactu, :com)');
+        $req->execute(array(
+            'utilisateur' => $user,
+            'filactu' => $idFil,
+            'com' => $com
+        ));
+        $req->closeCursor();
+        header("Location: publication.php");
+
+    }
+
     //////////////////////////////////////////////////////
     //////////////Fil d'actualité (AFFICHER) /////////////
+<<<<<<< HEAD
     /////////////////////////////////////////////////////!!
+=======
+    /////////////////////////////////////////////////////
+    
+>>>>>>> f4370a4fe2f997cffabbb125a45ed46bc256f924
 
     function afficherfile($db) {
         
         //$req = $db->query('SELECT * FROM filactu ORDER BY heurepost DESC');
         $req = $db->query('SELECT * FROM filactu INNER JOIN utilisateur ON filactu.Utilisateur = utilisateur.idUtilisateur ORDER BY heurepost DESC');
-        while ($donnees = $req->fetch())
-        {
+
+        while ($donnees = $req->fetch()) {                                         /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
+            
+            $reponse=$db->prepare('SELECT * FROM commentaires INNER JOIN utilisateur ON commentaires.Utilisateur = utilisateur.idUtilisateur WHERE filactu = :filactu');
+            $reponse->execute(array(
+                'filactu' => $donnees['idFil']
+            ));
+            
             echo '<div class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
@@ -104,34 +135,94 @@
                                     <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
                                 </div>
                                 <div class="ml-2">
-                                    <div class="h5 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
+                                    <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
                                     <div class="h7 text-muted">Nom complet</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="dropdown">
-                                    <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-ellipsis-h"></i>
-                                    </button>
+                                    <div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                    
                     <div class="card-body">
-                        <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
-
-                        <p class="card-text">
-                            '.$donnees['post'].'
-                        </p>
+                        <p class="card-text">'.$donnees['post'].'</p>
                     </div>
-                    <div class="card-footer">
-                        <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-                        <a href="#" class="card-link"><i class="fa fa-comment"></i> Commenter</a>
-                        <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Partager</a>
+                    <form method = "POST">
+                        <div class="card-footer d-flex flex-row-reverse">
+                            <input type="submit" name="pubcom" class="btn btn-link" value="Commenter">
+                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Abdellah">
+                            <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">
+                            <input type="button" name="like" class="btn btn-link" value="Like">
+                            ',/*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/'
+                        </div>
+                    </form>
+                    
+                    <div class="list-group">
+                        <a href="#" class="list-group-item bg-dark">Commentaires</a>
+                            <div class="list-group">';
+
+            
+            while($donnees2 = $reponse->fetch()) {                                ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
+
+                echo '<div class="geser gedf-card bg-dark text-white">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                        <img class="rounded-circle" width="30" src="https://picsum.photos/50/50" alt="">
+                                    </div>
+                                    <div class="ml-2">
+                                        <div class="h6 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>
+                                        <div class="h7 text-muted">Nom complet</div>
+                                        <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees2['heureCom'].'</div>
+                                    </div>
+                                </div>
+                            </div>
+                                    
+                            <div class="card-body">
+                                <p class="komen">'.$donnees2['com'].'</p>
+                            </div>
+                        </div>
+                    </div>';
+            }
+            
+            echo '      </div>
                     </div>
                 </div>';
+
         }
-        
+    }
+
+    /////////////////////////////////////////////////////
+    /////////////Messagerie (AFFICHER CONTACTS)/////////
+    ///////////////////////////////////////////////////
+
+    function affichercontacts($db,$idut) {
+
+        $req = $db->prepare('SELECT * FROM utilisateur2 WHERE idUtilisateur2 != :idUt');
+        $req->execute(array(
+            'idUt' => $idut
+        ));
+
+        while ($donnees = $req->fetch()) {
+            
+            echo '<a href="message.php?idUt='.$donnees['idUtilisateur2'].'">';
+
+            if(isset($_POST['idUt']) AND $_POST['idUt'] == $donnees['idUtilisateur2']) {
+                echo '<div class="chat_list active_chat">';
+            } else {
+                echo '<div class="chat_list">';
+            }
+            echo        '<div class="chat_people">
+                            <div class="chat_img"> 
+                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> 
+                            </div>
+                            <div class="chat_ib">
+                                <h5>'.$donnees['prenom'].' '.$donnees['nom'].'<span class="chat_date">DATE</span></h5>
+                                <p>2e exemple messages privés.</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>';
+        }
     }
 ?>
