@@ -187,5 +187,38 @@
 
         }
     }
-    
+
+    /////////////////////////////////////////////////////
+    /////////////Messagerie (AFFICHER CONTACTS)/////////
+    ///////////////////////////////////////////////////
+
+    function affichercontacts($db,$idut) {
+
+        $req = $db->prepare('SELECT * FROM utilisateur2 WHERE idUtilisateur2 != :idUt');
+        $req->execute(array(
+            'idUt' => $idut
+        ));
+
+        while ($donnees = $req->fetch()) {
+            
+            echo '<a href="message.php?idUt='.$donnees['idUtilisateur2'].'">';
+
+            if(isset($_POST['idUt']) AND $_POST['idUt'] == $donnees['idUtilisateur2']) {
+                echo '<div class="chat_list active_chat">';
+            } else {
+                echo '<div class="chat_list">';
+            }
+            echo        '<div class="chat_people">
+                            <div class="chat_img"> 
+                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> 
+                            </div>
+                            <div class="chat_ib">
+                                <h5>'.$donnees['prenom'].' '.$donnees['nom'].'<span class="chat_date">DATE</span></h5>
+                                <p>2e exemple messages privés.</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>';
+        }
+    }
 ?>
