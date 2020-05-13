@@ -131,55 +131,60 @@
                                     <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
                                 </div>
                                 <div class="ml-2">
-                                    <div class="h5 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
+                                    <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
                                     <div class="h7 text-muted">Nom complet</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="dropdown">
-                                    <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-ellipsis-h"></i>
-                                    </button>
+                                    <div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                    
                     <div class="card-body">
-                        <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
-
-                        <p class="card-text">
-                            '.$donnees['post'].'
-                        </p>
+                        <p class="card-text">'.$donnees['post'].'</p>
                     </div>
                     <form method = "POST">
-                        <div class="card-footer">
-                            <a href="#" class="card-link"><i class="fa fa-gittip" name="like"></i> Like</a>
-                            <input type="text" class="form-control" name="comment" id="message" rows="3" placeholder="Abdellah">
+                        <div class="card-footer d-flex flex-row-reverse">
+                            <input type="submit" name="pubcom" class="btn btn-link" value="Commenter">
+                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Abdellah">
                             <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">
-                            <input type="submit" name="pubcom" class="btn btn-light" value="Commenter">
+                            <input type="button" name="like" class="btn btn-link" value="Like">
                             ',/*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/'
                         </div>
-                    </form>';
+                    </form>
+                    
+                    <div class="list-group">
+                        <a href="#" class="list-group-item bg-dark">Commentaires</a>
+                            <div class="list-group">';
 
+            
             while($donnees2 = $reponse->fetch()) {                                ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
 
-                echo '<div class="mr-2">
-                        <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
-                    </div>
-                    <div class="ml-2">
-                        <div class="h5 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>
-                            <div class="h7 text-muted">Nom complet</div>
+                echo '<div class="geser gedf-card bg-dark text-white">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                        <img class="rounded-circle" width="30" src="https://picsum.photos/50/50" alt="">
+                                    </div>
+                                    <div class="ml-2">
+                                        <div class="h6 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>
+                                        <div class="h7 text-muted">Nom complet</div>
+                                        <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees2['heureCom'].'</div>
+                                    </div>
+                                </div>
+                            </div>
+                                    
+                            <div class="card-body">
+                                <p class="komen">'.$donnees2['com'].'</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees2['heureCom'].'</div>
-                                <p class="card-text">
-                                '.$donnees2['com'].'
-                                </p>
-                            </div>';
-
+                    </div>';
             }
-            echo '</div>';
+            
+            echo '      </div>
+                    </div>
+                </div>';
+
         }
     }
     
