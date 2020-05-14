@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    include('BDD.php');
+    require ('fonctions.php');
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,7 +26,7 @@
     <!-- En-tête -->
 
         <nav class="navbar">
-            <a href="#" class="navbar-brand text-white">walltech</a>
+            <a href="filactualites.php" class="navbar-brand text-white">walltech</a>
             <form class="form-inline">
                 <div class="input-group">
                     <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -49,31 +55,9 @@
                         <!-- Contacts messagerie -->
 
                         <div class="inbox_chat">
-                            <div class="chat_list active_chat">
-                                <div class="chat_people">
-                                    <div class="chat_img"> 
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> 
-                                    </div>
-                                    <div class="chat_ib">
-                                        <h5>NOM<span class="chat_date">DATE</span></h5>
-                                        <p>Exemple messages privés.</p>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- à dupliquer -->
+                            <?= affichercontacts($db,1) ?>
 
-                            <div class="chat_list">
-                                <div class="chat_people">
-                                    <div class="chat_img"> 
-                                        <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> 
-                                    </div>
-                                    <div class="chat_ib">
-                                        <h5>NOM 2<span class="chat_date">DATE</span></h5>
-                                        <p>2e exemple messages privés.</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -107,8 +91,10 @@
                                     </div>
                                     <div class="type_msg">
                                         <div class="input_msg_write">
-                                            <input type="text" class="write_msg text-white" placeholder="Type a message" />
-                                            <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                            <form method="POST" action="chat.php">
+                                                <input type="text" class="write_msg text-white" name="message" placeholder="Type a message" />
+                                                <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
