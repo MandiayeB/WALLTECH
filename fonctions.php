@@ -77,6 +77,7 @@
     //////////////////////////////////////////////////////
     //////////////Fil d'actualité (PUBLIER) //////////////
     /////////////////////////////////////////////////////
+    
     function postfile($texte, $user, $db) {
 
         $req = $db->prepare('INSERT INTO filactu (post, Utilisateur) VALUES (:post, :utilisateur)');
