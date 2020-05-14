@@ -84,14 +84,6 @@
                             Cours
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                            <!--<i class="fa fa-globe">
-                                <span class="badge badge-success">11</span>  NOTIFICATION
-                            </i>-->
-                            Onglet 5
-                            </a>
-                        </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Recherche" aria-label="Search">

@@ -145,8 +145,8 @@
                     </div>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
-                            <input type="submit" name="pubcom" class="btn btn-link" value="Commenter">
-                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Abdellah">
+                            <input type="submit" name="pubcom" class="btn btn-light" value="Commenter">
+                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Commentaire">
                             <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">
                             <input type="button" name="like" class="btn btn-link" value="Like">
                             ',/*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/'
