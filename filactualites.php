@@ -1,21 +1,7 @@
 <?php
-    
     session_start();
     include('BDD.php');
     require ('fonctions.php');
-    
-    if ( isset($_POST['publier']) ) {
-                        
-        postfile($_POST['post'], $_SESSION['idut'], $db);
-    
-    }
-
-    if(isset($_POST['pubcom'])) {
-            
-        commenter($_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil']);
-    
-    }
-   
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,84 +18,36 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </head>
     <body>
-        <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark" style="background: #102946;">
-            <form method="POST">    
-                <a class="navbar-brand" href="filactualites.php">walltech</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </form>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                            <!--<i class="fa fa-envelope-o">
-                                    <span class="badge badge-danger">11</span>  NOTIFICATION
-                                </i>-->
-                            Profil
-                            </a>
-                        </li>
-                        
-                        <form method="POST">
-                            <li class="nav-item">
-                                <a class="nav-link" href="chat.php">
-                                <!--<i class="fa fa-envelope-o">
-                                    <span class="badge badge-danger">11</span>  NOTIFICATION
-                                </i>-->
-                                Messages
-                                </a>
-                            </li>
-                        </form>
-                        
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <!--<i class="fa fa-envelope-o">
-                                <span class="badge badge-danger">11</span>  NOTIFICATION
-                            </i>-->
-                            Menu déroulant
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">exemple 1</a>
-                                <a class="dropdown-item" href="#">exemple 2</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">exemple 3</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                            <!--<i class="fa fa-bell">
-                                <span class="badge badge-info">11</span>  NOTIFICATION
-                            </i>-->
-                            Cours
-                            </a>
-                        </li>
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Recherche" aria-label="Search">
-                        <button class="btn btn-light my-2 my-sm-0" type="submit">Rechercher</button>
-                    </form>
+        <nav class="navbar">
+            <a href="#" class="navbar-brand text-white">walltech</a>
+            <form class="form-inline">
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" id="button-addon2">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </nav>
+            </form>
+        </nav>
     
     <!-- Profil -->
 
         <div class="container-fluid gedf-wrapper">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card bg-dark">
+                    <div class="card">
                         <div class="card-body bg-dark text-white">
                             <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
                             <div class="h7 text-muted">Nom complet</div>
                             <div class="h7">Description du profil</div>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <span class="border border-secondary"></span>
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Followers</div>
                                 <div class="h5">0</div>
                             </li>
-                            <span class="border border-secondary"></span>
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Following</div>
                                 <div class="h5">0</div>
@@ -118,6 +56,22 @@
                     </div>
                 </div>
 
+                <?php
+
+                    if ( isset($_POST['publier']) ) {
+                        
+                        postfile($_POST['post'], $_SESSION['idut'], $db);
+                    
+                    }
+
+                    if(isset($_POST['pubcom'])) {
+            
+                        commenter($_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil']);
+                    
+                    }
+
+                ?>
+
                 <!-- Modèle publication -->
                 
                 <div class="col-md-6 gedf-main">
@@ -125,10 +79,10 @@
                         <div class="card-header bg-dark text-white">
                             <ul class="nav nav-tabs card-header-tabs bg-dark text-white" id="myTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active bg-dark text-white border border-secondary" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Publier</a>
+                                    <a class="nav-link active bg-dark text-white" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Publier</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link bg-dark text-white border border-secondary" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
+                                    <a class="nav-link bg-dark text-white" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
                                 </li>
                             </ul>
                         </div>
@@ -138,7 +92,7 @@
                                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                                     <div class="form-group">
                                         <label class="sr-only" for="message">post</label>
-                                        <textarea class="form-control bg-dark border border-secondary" name='post' id="message" rows="3" placeholder="Quoi de neuf ?"></textarea>
+                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="What are you thinking?"></textarea>
                                     </div>
     
                                 </div>
@@ -212,7 +166,7 @@
 
                 </div>
                 <div class="col-md-3">
-                    <div class="card gedf-card bg-dark">
+                    <div class="card gedf-card">
                         <div class="card-body bg-dark text-white">
                             <h5 class="card-title">Card title</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
