@@ -1,8 +1,8 @@
 <?php 
 
+    ///////////////////////////////////////////////////////
+    //////////////// Creation d'un compte ////////////////
     /////////////////////////////////////////////////////
-    /////////// Creation d'un compte ////////////////////
-    ////////////////////////////////////////////////////
 
     function inscription ( $email, $password, $ipassword, $prenom, $nom, $db ){
 
@@ -47,9 +47,9 @@
 
     }
     
-    /////////////////////////////////////////////////////////////////
-    /////////////// Connexion d'un compte ///////////////////////////
-    /////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    /////////////// Connexion d'un compte ////////////////
+    /////////////////////////////////////////////////////
 
     function connexion ( $email, $password, $db ){
         
@@ -74,8 +74,8 @@
 
     }
 
-    //////////////////////////////////////////////////////
-    //////////////Fil d'actualité (PUBLIER) //////////////
+    ///////////////////////////////////////////////////////
+    ///////////// Fil d'actualité (PUBLIER) //////////////
     /////////////////////////////////////////////////////
     
     function postfile($texte, $user, $db) {
@@ -90,8 +90,8 @@
 
     }
 
-    //////////////////////////////////////////////////////
-    //////////////Fil d'actualité (COMMENTER) ////////////
+    ///////////////////////////////////////////////////////
+    ///////////// Fil d'actualité (COMMENTER) ////////////
     /////////////////////////////////////////////////////
 
     function commenter($com, $user, $db, $idFil) {
@@ -107,8 +107,8 @@
 
     }
 
-    //////////////////////////////////////////////////////
-    //////////////Fil d'actualité (AFFICHER) /////////////
+    ///////////////////////////////////////////////////////
+    ///////////// Fil d'actualité (AFFICHER) /////////////
     /////////////////////////////////////////////////////
     
 
@@ -116,15 +116,21 @@
         
         //$req = $db->query('SELECT * FROM filactu ORDER BY heurepost DESC');
         $req = $db->query('SELECT * FROM filactu INNER JOIN utilisateur ON filactu.Utilisateur = utilisateur.idUtilisateur ORDER BY heurepost DESC');
-
+        
         while ($donnees = $req->fetch()) {                                         /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
             
             $reponse=$db->prepare('SELECT * FROM commentaires INNER JOIN utilisateur ON commentaires.Utilisateur = utilisateur.idUtilisateur WHERE filactu = :filactu');
             $reponse->execute(array(
                 'filactu' => $donnees['idFil']
             ));
+
+            $req2 = $db->prepare('SELECT COUNT(*) FROM commentaires WHERE filactu = :filactu');
+            $req2->execute(array(
+                'filactu' => $donnees['idFil']
+            ));
+            $data = $req2->fetch();
             
-            echo '<div class="card gedf-card bg-dark text-white">
+            echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between align-items-center">
@@ -147,15 +153,20 @@
                         <div class="card-footer d-flex flex-row-reverse">
                             <input type="submit" name="pubcom" class="btn btn-light" value="Commenter">
                             <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Commentaire">
-                            <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">
-                            <input type="button" name="like" class="btn btn-link" value="Like">
+                            <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">';
+                            if($donnees['likepost'] > 0) {
+                                echo $donnees['likepost'];
+                            }
+                      echo '<input type="submit" name="like" class="btn btn-link" value="Like">
                             ',/*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/'
                         </div>
-                    </form>
-                    
-                    <div class="list-group">
-                        <a href="#" class="list-group-item bg-dark">Commentaires</a>
-                            <div class="list-group">';
+                    </form>';
+                
+                if($data['COUNT(*)']>0) {
+                    echo '<div class="list-group">
+                            <a href="#id'.$donnees['idFil'].'" onclick="return false" class="list-group-item bg-dark">Commentaires</a>
+                                <div class="list-group">';
+                }
 
             
             while($donnees2 = $reponse->fetch()) {                                ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
@@ -181,17 +192,30 @@
                         </div>
                     </div>';
             }
-            
-            echo '      </div>
-                    </div>
-                </div>';
+            if($data['COUNT(*)']>0) {
+                echo '      </div>
+                        </div>';
+            }
+            echo '</div>';
 
         }
     }
 
+    ///////////////////////////////////////////////////////
+    ///////////// Fil d'actualité (LIKE) /////////////////
     /////////////////////////////////////////////////////
-    /////////////Messagerie (AFFICHER CONTACTS)/////////
-    ///////////////////////////////////////////////////
+
+    function likepost($db, $idFil) {
+        $req = $db->prepare('UPDATE filactu SET likepost = likepost+1 WHERE idFil = :idFil');
+        $req->execute(array(
+            'idFil' => $idFil
+        ));
+        $req->closeCursor();
+        header("Location: publication.php");
+    }
+    ///////////////////////////////////////////////////////
+    /////////// Messagerie (AFFICHER CONTACTS) ///////////
+    /////////////////////////////////////////////////////
 
     function affichercontacts($db,$idut) {
 
@@ -202,9 +226,9 @@
 
         while ($donnees = $req->fetch()) {
             
-            echo '<a href="message.php?idUt='.$donnees['idUtilisateur2'].'">';
+            echo '<a href="chat.php?idUt='.$donnees['idUtilisateur2'].'">';
 
-            if(isset($_POST['idUt']) AND $_POST['idUt'] == $donnees['idUtilisateur2']) {
+            if(isset($_GET['idUt']) AND $_GET['idUt'] == $donnees['idUtilisateur2']) {
                 echo '<div class="chat_list active_chat">';
             } else {
                 echo '<div class="chat_list">';
@@ -220,6 +244,54 @@
                         </div>
                     </div>
                 </a>';
+        }
+    }
+
+    ///////////////////////////////////////////////////////
+    ///////////// Messagerie (POSTER MESSAGES) ///////////
+    /////////////////////////////////////////////////////
+
+    function postmessages($db,$message,$utilisateur,$recepteur) {
+        $req = $db->prepare('INSERT INTO messages (Envoyeur, Recepteur, Messagecontent) VALUES (:envoyeur, :recepteur, :messagecontent)');
+        $req->execute(array(
+            'envoyeur' => $utilisateur,
+            'recepteur' => $recepteur,
+            'messagecontent' => $message
+        ));
+        $req->closeCursor();
+        header('Location: message.php?idUt='.$recepteur.'');
+    }
+
+    ///////////////////////////////////////////////////////
+    /////////// Messagerie (AFFICHER MESSAGES) ///////////
+    /////////////////////////////////////////////////////
+
+    function affichermessages($db,$ut1,$ut2) {
+        $req = $db->prepare('SELECT * FROM messages WHERE Envoyeur = :ut1 OR Envoyeur = :ut2 AND Recepteur = :ut1 OR Recepteur = :ut2');
+        $req->execute(array(
+            'ut1' => $ut1,
+            'ut2' => $ut2
+        ));
+
+        while ($donnees = $req->fetch()) {
+            if($donnees['Envoyeur'] == $ut1 AND $donnees['Recepteur'] == $ut2) {
+                echo '<div class="outgoing_msg">
+                        <div class="sent_msg">
+                            <p>'.$donnees['Messagecontent'].'</p>
+                            <span class="time_date">'.$donnees['datemessage'].'</div>
+                      </div>';
+
+            } else if($donnees['Envoyeur'] == $ut2 AND $donnees['Recepteur'] == $ut1) {
+                echo'<div class="incoming_msg">
+                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <p>'.$donnees['Messagecontent'].'</p>
+                                    <span class="time_date">'.$donnees['datemessage'].'</span>
+                                </div>
+                            </div>
+                    </div>';
+            }
         }
     }
 ?>
