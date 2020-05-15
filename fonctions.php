@@ -246,9 +246,61 @@
                 </a>';
         }
     }
+
+
+    ///////////////////////////////////////////////////////
+    ///////////// Messagerie (POSTER MESSAGES) ///////////
+    /////////////////////////////////////////////////////
+
+    function postmessages($db,$message,$utilisateur,$recepteur) {
+        $req = $db->prepare('INSERT INTO messages (Envoyeur, Recepteur, Messagecontent) VALUES (:envoyeur, :recepteur, :messagecontent)');
+        $req->execute(array(
+            'envoyeur' => $utilisateur,
+            'recepteur' => $recepteur,
+            'messagecontent' => $message
+        ));
+        $req->closeCursor();
+        header('Location: message.php?idUt='.$recepteur.'');
+    }
+
+    ///////////////////////////////////////////////////////
+    /////////// Messagerie (AFFICHER MESSAGES) ///////////
+    /////////////////////////////////////////////////////
+
+    function affichermessages($db,$ut1,$ut2) {
+        $req = $db->prepare('SELECT * FROM messages WHERE Envoyeur = :ut1 OR Envoyeur = :ut2 AND Recepteur = :ut1 OR Recepteur = :ut2');
+        $req->execute(array(
+            'ut1' => $ut1,
+            'ut2' => $ut2
+        ));
+
+        while ($donnees = $req->fetch()) {
+            if($donnees['Envoyeur'] == $ut1 AND $donnees['Recepteur'] == $ut2) {
+                echo '<div class="outgoing_msg">
+                        <div class="sent_msg">
+                            <p>'.$donnees['Messagecontent'].'</p>
+                            <span class="time_date">'.$donnees['datemessage'].'</div>
+                      </div>';
+
+            } else if($donnees['Envoyeur'] == $ut2 AND $donnees['Recepteur'] == $ut1) {
+                echo'<div class="incoming_msg">
+                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <p>'.$donnees['Messagecontent'].'</p>
+                                    <span class="time_date">'.$donnees['datemessage'].'</span>
+                                </div>
+                            </div>
+                    </div>';
+            }
+        }
+    }
+
+    
 ///////////////////////////////////////////////////////////////////////////
 ////////////////////Changement de mot de passe////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
 
 function modifier($email,$motdepasse,$confirme,$iconfirme,$db){
 
@@ -293,4 +345,5 @@ function modifier($email,$motdepasse,$confirme,$iconfirme,$db){
         echo"Le mot de passe est incorrect";
     }
 }
+
 ?>
