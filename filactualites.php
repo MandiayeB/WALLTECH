@@ -47,7 +47,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="modifier.php">
                             <!--<i class="fa fa-envelope-o">
                                     <span class="badge badge-danger">11</span>  NOTIFICATION
                                 </i>-->
