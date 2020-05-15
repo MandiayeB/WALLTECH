@@ -38,10 +38,10 @@
                 
                 ]);
 
-                header("Location:accueil.php");
+                header("Location:inscription.php");
             }
             else {
-                echo " Les mots de passe sont incorrect ";
+                echo " Les mots de passes sont incorrects ";
             }
         }
 
@@ -133,15 +133,13 @@
             echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
+                            <div class="mr-2">
+                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
+                                <div class="h7 text-muted">Nom complet</div>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="mr-2">
-                                    <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
-                                </div>
-                                <div class="ml-2">
-                                    <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
-                                    <div class="h7 text-muted">Nom complet</div>
-                                    <div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
-                                </div>
+                                <div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
                             </div>
                         </div>
                     </div>
