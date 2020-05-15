@@ -88,6 +88,14 @@
                             Cours
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="accueil.php">
+                            <!--<i class="fa fa-bell">
+                                <span class="badge badge-info">11</span>  NOTIFICATION
+                            </i>-->
+                            Déconnexion
+                            </a>
+                        </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Recherche" aria-label="Search">
