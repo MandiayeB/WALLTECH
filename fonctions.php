@@ -222,4 +222,51 @@
                 </a>';
         }
     }
+///////////////////////////////////////////////////////////////////////////
+////////////////////Changement de mot de passe////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+function modifier($email,$motdepasse,$confirme,$iconfirme,$db){
+
+
+    $q = $db -> prepare("SELECT * FROM utilisateur WHERE email = :email");
+    $q-> execute(['email'=>$email]);
+    $result = $q -> fetch();
+    
+    if($result['motdepasse'] == $motdepasse){
+
+        
+        if($confirme != ""){    
+        
+
+            if($confirme == $iconfirme){
+
+                $f =$db -> prepare("UPDATE utilisateur SET motdepasse = :mdp WHERE email = :email");
+                $f -> execute ([
+                    'email'=>$email,
+                    'mdp'=>$iconfirme
+                    ]);
+                $b = $db -> prepare("UPDATE utilisateur2 SET motdepasse = :mdp WHERE email = :email");
+                $b -> execute ([
+                    'email'=>$email,
+                    'mdp'=>$iconfirme
+                    ]);
+                header('Location:modifier.php');
+
+            }
+
+            else{
+                echo"Les deux mots de passe ne sont pas identique";
+            }
+
+        }
+        else {
+            echo"Vous n'avez pas remplit le nouveau mot de passe";
+        }
+
+    }
+    else {
+        echo"Le mot de passe est incorrect";
+    }
+}
 ?>
