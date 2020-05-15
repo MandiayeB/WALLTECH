@@ -1,9 +1,8 @@
 <?php
-    
     session_start();
     include('BDD.php');
     require ('fonctions.php');
-    
+
     if ( isset($_POST['publier']) ) {
                         
         postfile($_POST['post'], $_SESSION['idut'], $db);
@@ -11,11 +10,16 @@
     }
 
     if(isset($_POST['pubcom'])) {
-            
+
         commenter($_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil']);
     
     }
-   
+
+    if(isset($_POST['like'])) {
+
+        likepost($db, $_POST['idFil']);
+    
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,7 +57,7 @@
                         
                         <form method="POST">
                             <li class="nav-item">
-                                <a class="nav-link" href="chat.php">
+                                <a class="nav-link" href="chat.php?idUt=1">
                                 <!--<i class="fa fa-envelope-o">
                                     <span class="badge badge-danger">11</span>  NOTIFICATION
                                 </i>-->
@@ -90,26 +94,24 @@
                         <button class="btn btn-light my-2 my-sm-0" type="submit">Rechercher</button>
                     </form>
                 </div>
-            </nav>
+        </nav>
     
     <!-- Profil -->
 
         <div class="container-fluid gedf-wrapper">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card bg-dark">
+                    <div class="card">
                         <div class="card-body bg-dark text-white">
                             <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
                             <div class="h7 text-muted">Nom complet</div>
                             <div class="h7">Description du profil</div>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <span class="border border-secondary"></span>
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Followers</div>
                                 <div class="h5">0</div>
                             </li>
-                            <span class="border border-secondary"></span>
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Following</div>
                                 <div class="h5">0</div>
@@ -125,10 +127,10 @@
                         <div class="card-header bg-dark text-white">
                             <ul class="nav nav-tabs card-header-tabs bg-dark text-white" id="myTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active bg-dark text-white border border-secondary" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Publier</a>
+                                    <a class="nav-link active bg-dark text-white" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Publier</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link bg-dark text-white border border-secondary" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
+                                    <a class="nav-link bg-dark text-white" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
                                 </li>
                             </ul>
                         </div>
@@ -138,7 +140,7 @@
                                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                                     <div class="form-group">
                                         <label class="sr-only" for="message">post</label>
-                                        <textarea class="form-control bg-dark border border-secondary" name='post' id="message" rows="3" placeholder="Quoi de neuf ?"></textarea>
+                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="What are you thinking?"></textarea>
                                     </div>
     
                                 </div>
@@ -212,7 +214,7 @@
 
                 </div>
                 <div class="col-md-3">
-                    <div class="card gedf-card bg-dark">
+                    <div class="card gedf-card">
                         <div class="card-body bg-dark text-white">
                             <h5 class="card-title">Card title</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
