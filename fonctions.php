@@ -6,19 +6,21 @@
 
     function inscription ( $email, $password, $ipassword, $prenom, $nom, $db ){
 
-        $q = $db -> prepare ("SELECT * FROM utilisateur WHERE email = :email");
-        $q -> execute (['email'=>$email]);
+        $q = $db -> prepare ( "SELECT * FROM utilisateur WHERE email = :email" );
+        $q -> execute ( ['email'=>$email] );
         $result = $q -> fetch();
 
         if ( $result['email'] == $email ){
 
-            echo "<strong> email deja existant </strong>";
+            echo "<strong> email déjà existant </strong>";
         }
 
         else {
             if ( $ipassword == $password ){
                 
-                $i = $db->prepare ("INSERT INTO utilisateur (email,motdepasse,prenom,nom) VALUES (:email,:motdepasse,:prenom,:nom)" );
+                $i = $db->prepare ( "INSERT INTO utilisateur ( email, motdepasse, prenom, nom ) 
+                                        VALUES ( :email,:motdepasse,:prenom,:nom )" );
+
                 $i -> execute ([
 
                 'email' => $email,
@@ -28,7 +30,9 @@
                 
                 ]);
 
-                $t = $db->prepare ("INSERT INTO utilisateur2 (email,motdepasse,prenom,nom) VALUES (:email,:motdepasse,:prenom,:nom)" );
+                $t = $db->prepare ( "INSERT INTO utilisateur2 ( email,motdepasse,prenom,nom) 
+                                        VALUES ( :email, :motdepasse, :prenom, :nom )" );
+
                 $t -> execute ([
 
                 'email' => $email,
@@ -38,7 +42,7 @@
                 
                 ]);
 
-                header("Location:accueil.php");
+                header( "Location:accueil.php" );
             }
             else {
                 echo " Les mots de passe sont incorrect ";
@@ -53,18 +57,20 @@
 
     function connexion ( $email, $password, $db ){
         
-        $q = $db->prepare("SELECT * FROM utilisateur WHERE email = :email");
-        $q -> execute(['email'=>$email]);
+        $q = $db->prepare( "SELECT * FROM utilisateur WHERE email = :email" );
+        $q -> execute( ['email'=>$email] );
 
-        while ($user = $q->fetch()) {
+        while ( $user = $q->fetch() ) {
 
-            if($user['motdepasse'] == $password){
+            if ( $user['motdepasse'] == $password ){
+
                 $_SESSION['prenom'] = $user['prenom'];
                 $_SESSION['nom'] = $user['nom'];
                 $_SESSION['idut'] = $user['idUtilisateur'];
                 $_SESSION['email'] = $email;
                 header("Location:filactualites.php");
             }
+
             else {
 
                 echo " <br> identifiant incorrect <br> ";
@@ -78,15 +84,15 @@
     ///////////// Fil d'actualité (PUBLIER) //////////////
     /////////////////////////////////////////////////////
     
-    function postfile($texte, $user, $db) {
+    function postfile ( $texte, $user, $db ) {
 
-        $req = $db->prepare('INSERT INTO filactu (post, Utilisateur) VALUES (:post, :utilisateur)');
+        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur ) VALUES ( :post, :utilisateur )' );
         $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user
         ));
         $req->closeCursor();
-        header("Location: publication.php");
+        header( "Location: publication.php" );
 
     }
 
@@ -94,16 +100,16 @@
     ///////////// Fil d'actualité (COMMENTER) ////////////
     /////////////////////////////////////////////////////
 
-    function commenter($com, $user, $db, $idFil) {
+    function commenter ( $com, $user, $db, $idFil ) {
 
-        $req = $db->prepare('INSERT INTO commentaires (Utilisateur, filactu, com) VALUES (:utilisateur, :filactu, :com)');
+        $req = $db->prepare( 'INSERT INTO commentaires ( Utilisateur, filactu, com ) VALUES ( :utilisateur, :filactu, :com )');
         $req->execute(array(
             'utilisateur' => $user,
             'filactu' => $idFil,
             'com' => $com
         ));
         $req->closeCursor();
-        header("Location: publication.php");
+        header( "Location: publication.php" );
 
     }
 
@@ -112,23 +118,38 @@
     /////////////////////////////////////////////////////
     
 
-    function afficherfile($db) {
+    function afficherfile ( $db, $user ) {
         
         //$req = $db->query('SELECT * FROM filactu ORDER BY heurepost DESC');
-        $req = $db->query('SELECT * FROM filactu INNER JOIN utilisateur ON filactu.Utilisateur = utilisateur.idUtilisateur ORDER BY heurepost DESC');
+        $req = $db->query( 'SELECT * FROM filactu INNER JOIN utilisateur ON 
+                filactu.Utilisateur = utilisateur.idUtilisateur ORDER BY heurepost DESC' );
         
-        while ($donnees = $req->fetch()) {                                         /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
+        while ( $donnees = $req->fetch() ) {                                         /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
             
-            $reponse=$db->prepare('SELECT * FROM commentaires INNER JOIN utilisateur ON commentaires.Utilisateur = utilisateur.idUtilisateur WHERE filactu = :filactu');
+            $reponse=$db->prepare( 'SELECT * FROM commentaires INNER JOIN utilisateur ON 
+                    commentaires.Utilisateur = utilisateur.idUtilisateur WHERE filactu = :filactu ORDER BY heureCom' );
             $reponse->execute(array(
                 'filactu' => $donnees['idFil']
             ));
 
-            $req2 = $db->prepare('SELECT COUNT(*) FROM commentaires WHERE filactu = :filactu');
+            $req2 = $db->prepare( 'SELECT COUNT(*) FROM commentaires WHERE filactu = :filactu' );
             $req2->execute(array(
                 'filactu' => $donnees['idFil']
             ));
             $data = $req2->fetch();
+
+            $req3 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil' );
+            $req3->execute(array(
+                'fil' => $donnees['idFil']
+            ));
+            $data2 = $req3->fetch();
+
+            $req4 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil AND Utilisateur = :user' );
+            $req4->execute(array(
+                'fil' => $donnees['idFil'],
+                'user' => $user
+            ));
+            $data3 = $req4->fetch();
             
             echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
@@ -151,25 +172,48 @@
                     </div>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
-                            <input type="submit" name="pubcom" class="btn btn-light" value="Commenter">
-                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Commentaire">
+                            
+                            <button type="submit" name="pubcom" class="btn btn-light" style="background-color: transparent; border: none;">
+                                <img src="arrow.png" width="25px" height="25px" />
+                            </button>
+                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Répondre">
                             <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">';
-                            if($donnees['likepost'] > 0) {
-                                echo $donnees['likepost'];
+
+                            if ( $data2['COUNT(*)'] > 0 ) {
+
+                                echo '<div class="h6 m-0 col">'.$data2['COUNT(*)'].'</div>';
+
+                            } else {
+
+                                echo '<div class="h6 m-0 col"></div>';
+
                             }
-                      echo '<input type="submit" name="like" class="btn btn-link" value="Like">
-                            ',/*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/'
-                        </div>
+                            
+                            if ( $data3['COUNT(*)'] > 0 ) {
+
+                                echo '<button type="submit" name="like" class="btn btn-light" style="background-color: transparent; border: none;">
+                                        <img src="heart.png" width="25px" height="25px" />
+                                      </button>';
+
+                            } else {
+                                
+                                echo '<button type="submit" name="like" class="btn btn-light" style="background-color: transparent; border: none;">
+                                        <img src="noheart.png" width="25px" height="25px" />
+                                      </button>';
+
+                            }
+                      echo /*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/
+                        '</div>
                     </form>';
                 
-                if($data['COUNT(*)']>0) {
+                if ( $data['COUNT(*)'] > 0 ) {
                     echo '<div class="list-group">
                             <a href="#id'.$donnees['idFil'].'" onclick="return false" class="list-group-item bg-dark">Commentaires</a>
                                 <div class="list-group">';
                 }
 
             
-            while($donnees2 = $reponse->fetch()) {                                ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
+            while ( $donnees2 = $reponse->fetch() ) {                                ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
 
                 echo '<div class="geser gedf-card bg-dark text-white">
                         <div class="card-header">
@@ -192,7 +236,7 @@
                         </div>
                     </div>';
             }
-            if($data['COUNT(*)']>0) {
+            if ( $data['COUNT(*)'] > 0 ) {
                 echo '      </div>
                         </div>';
             }
@@ -205,12 +249,34 @@
     ///////////// Fil d'actualité (LIKE) /////////////////
     /////////////////////////////////////////////////////
 
-    function likepost($db, $idFil) {
-        $req = $db->prepare('UPDATE filactu SET likepost = likepost+1 WHERE idFil = :idFil');
+    function likepost ( $db, $idFil, $user ) {
+
+        $req = $db->prepare('SELECT COUNT(*) FROM likefil WHERE idFil = :idFil AND Utilisateur = :idUt');
         $req->execute(array(
-            'idFil' => $idFil
+            'idFil' => $idFil,
+            'idUt' => $user
         ));
-        $req->closeCursor();
+        $data = $req->fetch();
+        
+        if( $data['COUNT(*)'] == 0 ) {
+            $req2 = $db->prepare('INSERT INTO likefil (idFil, Utilisateur) VALUES (:idFil, :Utilisateur)');
+            $req2->execute(array(
+                'idFil' => $idFil,
+                'Utilisateur' => $user
+                
+            ));
+            $req2->closeCursor();
+
+        } else if ( $data['COUNT(*)'] > 0 ) {
+            $req3 = $db->prepare('DELETE FROM likefil WHERE idFil = :idFil AND Utilisateur = :user');
+            $req3->execute(array(
+                'idFil' => $idFil,
+                'user' => $user
+                
+            ));
+            $req3->closeCursor();
+        }
+
         header("Location: publication.php");
     }
 
@@ -218,7 +284,7 @@
     /////////// Messagerie (AFFICHER CONTACTS) ///////////
     /////////////////////////////////////////////////////
 
-    function affichercontacts($db,$idut) {
+    function affichercontacts ( $db, $idut ) {
 
         $req = $db->prepare('SELECT * FROM utilisateur2 WHERE idUtilisateur2 != :idUt');
         $req->execute(array(
@@ -253,37 +319,39 @@
     ///////////// Messagerie (POSTER MESSAGES) ///////////
     /////////////////////////////////////////////////////
 
-    function postmessages($db,$message,$utilisateur,$recepteur) {
-        $req = $db->prepare('INSERT INTO messages (Envoyeur, Recepteur, Messagecontent) VALUES (:envoyeur, :recepteur, :messagecontent)');
+    function postmessages ( $db, $message, $utilisateur, $recepteur ) {
+        $req = $db->prepare( 'INSERT INTO messages ( Envoyeur, Recepteur, Messagecontent ) 
+                                VALUES ( :envoyeur, :recepteur, :messagecontent )' );
         $req->execute(array(
             'envoyeur' => $utilisateur,
             'recepteur' => $recepteur,
             'messagecontent' => $message
         ));
         $req->closeCursor();
-        header('Location: message.php?idUt='.$recepteur.'');
+        header( 'Location: message.php?idUt='.$recepteur.'' );
     }
 
     ///////////////////////////////////////////////////////
     /////////// Messagerie (AFFICHER MESSAGES) ///////////
     /////////////////////////////////////////////////////
 
-    function affichermessages($db,$ut1,$ut2) {
-        $req = $db->prepare('SELECT * FROM messages WHERE Envoyeur = :ut1 OR Envoyeur = :ut2 AND Recepteur = :ut1 OR Recepteur = :ut2');
+    function affichermessages ( $db ,$ut1, $ut2 ) {
+        $req = $db->prepare( 'SELECT * FROM messages WHERE Envoyeur = :ut1 OR Envoyeur = :ut2 
+                                AND Recepteur = :ut1 OR Recepteur = :ut2' );
         $req->execute(array(
             'ut1' => $ut1,
             'ut2' => $ut2
         ));
 
-        while ($donnees = $req->fetch()) {
-            if($donnees['Envoyeur'] == $ut1 AND $donnees['Recepteur'] == $ut2) {
+        while ( $donnees = $req->fetch() ) {
+            if ( $donnees['Envoyeur'] == $ut1 AND $donnees['Recepteur'] == $ut2 ) {
                 echo '<div class="outgoing_msg">
                         <div class="sent_msg">
                             <p>'.$donnees['Messagecontent'].'</p>
                             <span class="time_date">'.$donnees['datemessage'].'</div>
                       </div>';
 
-            } else if($donnees['Envoyeur'] == $ut2 AND $donnees['Recepteur'] == $ut1) {
+            } else if ( $donnees['Envoyeur'] == $ut2 AND $donnees['Recepteur'] == $ut1 ) {
                 echo'<div class="incoming_msg">
                         <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
                             <div class="received_msg">
@@ -298,53 +366,51 @@
     }
 
     
-///////////////////////////////////////////////////////////
-////////////// Changement de mot de passe ////////////////
-/////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+    ////////////// Changement de mot de passe ////////////////
+    /////////////////////////////////////////////////////////
 
 
-function modifier($email,$motdepasse,$confirme,$iconfirme,$db){
+    function modifier ( $email, $motdepasse, $confirme, $iconfirme, $db ){
 
 
-    $q = $db -> prepare("SELECT * FROM utilisateur WHERE email = :email");
-    $q-> execute(['email'=>$email]);
-    $result = $q -> fetch();
-    
-    if($result['motdepasse'] == $motdepasse){
-
+        $q = $db -> prepare( "SELECT * FROM utilisateur WHERE email = :email" );
+        $q-> execute( ['email'=>$email] );
+        $result = $q -> fetch();
         
-        if($confirme != ""){    
+        if ( $result['motdepasse'] == $motdepasse) {
+
+            if( $confirme != "" ){    
         
+                if( $confirme == $iconfirme ){
 
-            if($confirme == $iconfirme){
+                    $f =$db -> prepare( "UPDATE utilisateur SET motdepasse = :mdp WHERE email = :email" );
+                    $f -> execute ([
+                        'email'=>$email,
+                        'mdp'=>$iconfirme
+                        ]);
+                    $b = $db -> prepare( "UPDATE utilisateur2 SET motdepasse = :mdp WHERE email = :email" );
+                    $b -> execute ([
+                        'email'=>$email,
+                        'mdp'=>$iconfirme
+                        ]);
+                    header( 'Location:modifier.php' );
 
-                $f =$db -> prepare("UPDATE utilisateur SET motdepasse = :mdp WHERE email = :email");
-                $f -> execute ([
-                    'email'=>$email,
-                    'mdp'=>$iconfirme
-                    ]);
-                $b = $db -> prepare("UPDATE utilisateur2 SET motdepasse = :mdp WHERE email = :email");
-                $b -> execute ([
-                    'email'=>$email,
-                    'mdp'=>$iconfirme
-                    ]);
-                header('Location:modifier.php');
+                }
+
+                else {
+                    echo "Les deux mots de passe ne sont pas identique";
+                }
 
             }
-
-            else{
-                echo"Les deux mots de passe ne sont pas identique";
+            else {
+                echo "Vous n'avez pas remplit le nouveau mot de passe";
             }
 
         }
         else {
-            echo"Vous n'avez pas remplit le nouveau mot de passe";
+            echo "Le mot de passe est incorrect";
         }
-
     }
-    else {
-        echo"Le mot de passe est incorrect";
-    }
-}
 
 ?>

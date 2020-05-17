@@ -1,7 +1,7 @@
 <?php
     session_start();
-    include('BDD.php');
-    require ('fonctions.php');
+    include( 'BDD.php' );
+    require ( 'fonctions.php' );
 
 ?>
 <!DOCTYPE html>
@@ -89,8 +89,8 @@
 			</div>
 		</div>	
 	<?php
-		if(isset($_GET['update'])){
-			modifier($_SESSION['email'],$_GET['password'],$_GET['confirm'],$_GET['iconfirm'],$db);
+		if ( isset ( $_GET['update'] ) ){
+			modifier ( $_SESSION['email'], $_GET['password'], $_GET['confirm'], $_GET['iconfirm'], $db );
 		}
 	?>	
 	</body>

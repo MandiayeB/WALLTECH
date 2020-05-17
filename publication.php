@@ -1,6 +1,6 @@
 <?php
 
     session_start();
-    header("Location: filactualites.php");
+    header( "Location: filactualites.php" );
 
 ?>

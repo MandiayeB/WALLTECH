@@ -68,14 +68,14 @@ body {
     padding-bottom: 0;
   }
 
-.h7 {
-    font-size: 0.8rem;
-}
+  .h7 {
+      font-size: 0.8rem;
+  }
 
-.gedf-wrapper {
-    margin-top: 0.97rem;
+  .gedf-wrapper {
+      margin-top: 0.97rem;
+  }
 }
-
 @media (min-width: 992px) {
     .gedf-main {
         padding-left: 4rem;
@@ -121,10 +121,14 @@ body {
     border-width: 1px 0 0 0;
 }
   
-  .list-group > .list-group-item:first-child {
-    border-top-width: 0;
-  }
-  
-  .list-group  > .list-group > .list-group-item {
-    padding-left: 2.5rem;
-  }
+.list-group > .list-group-item:first-child {
+  border-top-width: 0;
+}
+
+.list-group  > .list-group > .list-group-item {
+  padding-left: 2.5rem;
+}
+
+.btn-space {
+  margin-right: 50px;
+}

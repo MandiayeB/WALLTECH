@@ -1,11 +1,11 @@
 <?php
     session_start();
-    include('BDD.php');
-    require ('fonctions.php');
+    include( 'BDD.php' );
+    require ( 'fonctions.php' );
 
     if ( isset($_POST['message']) ) {
                         
-        postmessages($db,$_POST['message'],$_SESSION['idut'],$_GET['idUt']);
+        postmessages( $db, $_POST['message'], $_SESSION['idut'], $_GET['idUt'] );
     
     }
 ?>
@@ -50,7 +50,7 @@
 
                         <div class="inbox_chat">
 
-                            <?php affichercontacts($db,$_SESSION['idut']); ?>
+                            <?php affichercontacts( $db, $_SESSION['idut'] ); ?>
 
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                     <div class="msg_history">
 
                                 <?php 
-                                    affichermessages($db,$_SESSION['idut'],$_GET['idUt']);
+                                    affichermessages( $db, $_SESSION['idut'], $_GET['idUt'] );
                                 ?>
 
                                     <div class="type_msg">
