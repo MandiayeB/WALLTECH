@@ -1,23 +1,23 @@
 <?php
     session_start();
-    include('BDD.php');
-    require ('fonctions.php');
+    include( 'BDD.php' );
+    require ( 'fonctions.php' );
 
-    if ( isset($_POST['publier']) ) {
+    if ( isset( $_POST['publier'] ) ) {
                         
-        postfile($_POST['post'], $_SESSION['idut'], $db);
+        postfile( $_POST['post'], $_SESSION['idut'], $db );
     
     }
 
-    if(isset($_POST['pubcom'])) {
+    if( isset( $_POST['pubcom'] ) ) {
 
-        commenter($_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil']);
+        commenter( $_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil'] );
     
     }
 
-    if(isset($_POST['like'])) {
+    if( isset( $_POST['like'] ) ) {
 
-        likepost($db, $_POST['idFil']);
+        likepost( $db, $_POST['idFil'], $_SESSION['idut'] );
     
     }
 ?>
@@ -37,7 +37,10 @@
     </head>
     <body>
     
+    <!-- En-tête -->
+    
         <?php include('header.php'); ?>
+
     <!-- Profil -->
 
         <div class="container-fluid gedf-wrapper">
@@ -82,7 +85,7 @@
                                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                                     <div class="form-group">
                                         <label class="sr-only" for="message">post</label>
-                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="What are you thinking?"></textarea>
+                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="Quoi de neuf ?"></textarea>
                                     </div>
     
                                 </div>
@@ -107,7 +110,7 @@
 
                     <?php 
                         
-                    afficherfile($db);
+                    afficherfile( $db, $_SESSION['idut'] );
                         
                     ?>
                     

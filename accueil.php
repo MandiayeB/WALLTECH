@@ -1,13 +1,13 @@
 <?php 
     session_start();
-    include('BDD.php');
-    require ('fonctions.php');
+    include( 'BDD.php' );
+    require ( 'fonctions.php' );
 ?>
 <?php 
 
-if (isset($_POST['inscription'])==TRUE){
+if ( isset( $_POST['inscription'] ) == TRUE ){
 
-    inscription($_POST['email'],$_POST['password'], $_POST['ipassword'], $_POST['prenom'], $_POST['nom'], $db);
+    inscription( $_POST['email'], $_POST['password'], $_POST['ipassword'], $_POST['prenom'], $_POST['nom'], $db );
 }
 
 ?>
@@ -49,11 +49,13 @@ if (isset($_POST['inscription'])==TRUE){
                             </div>
                         </div>
                     </div>
-                </header>
-            </form>
-            <?php 
-            
-                if (isset($_POST['connexion'])==TRUE){
+                </div>
+            </div>
+        </header>
+    </form>
+    <?php 
+    
+        if ( isset( $_POST['connexion'] ) == TRUE ){
 
                     connexion( $_POST['coemail'], $_POST['copassword'], $db );
 
