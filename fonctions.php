@@ -4,7 +4,7 @@
     //////////////// Creation d'un compte ////////////////
     /////////////////////////////////////////////////////
 
-    function inscription ( $email, $password, $ipassword, $prenom, $nom, $db ){
+    function inscription ( $email, $password, $ipassword, $prenom, $nom, $db, $filename, $tmpname ){
 
         $q = $db -> prepare ( "SELECT * FROM utilisateur WHERE email = :email" );
         $q -> execute ( ['email'=>$email] );
@@ -17,28 +17,36 @@
 
         else {
             if ( $ipassword == $password ){
+
+                $name_file = $filename;
+                $tmp_name = $tmpname;
+                $local_image = "C:\wamp64\www\Walltech\images/";
+                $chemin = "images/".$name_file;
+                move_uploaded_file ( $tmp_name , $local_image.$name_file);
                 
-                $i = $db->prepare ( "INSERT INTO utilisateur ( email, motdepasse, prenom, nom ) 
-                                        VALUES ( :email,:motdepasse,:prenom,:nom )" );
+                $i = $db->prepare ( "INSERT INTO utilisateur ( email, motdepasse, prenom, nom, photodeprofil ) 
+                                        VALUES ( :email, :motdepasse, :prenom, :nom, :photo )" );
 
                 $i -> execute ([
 
                 'email' => $email,
-                'motdepasse'=>$password,
-                'prenom'=>$prenom,
-                'nom'=>$nom
+                'motdepasse' => $password,
+                'prenom' => $prenom,
+                'nom' => $nom,
+                'photo' => $chemin
                 
                 ]);
 
-                $t = $db->prepare ( "INSERT INTO utilisateur2 ( email,motdepasse,prenom,nom) 
-                                        VALUES ( :email, :motdepasse, :prenom, :nom )" );
+                $t = $db->prepare ( "INSERT INTO utilisateur2 ( email, motdepasse, prenom, nom, photodeprofil) 
+                                        VALUES ( :email, :motdepasse, :prenom, :nom, :photo )" );
 
                 $t -> execute ([
 
                 'email' => $email,
-                'motdepasse'=>$password,
-                'prenom'=>$prenom,
-                'nom'=>$nom
+                'motdepasse' => $password,
+                'prenom' => $prenom,
+                'nom' => $nom,
+                'photo' => $chemin
                 
                 ]);
 
@@ -160,7 +168,15 @@
                                 <div class="h7 text-muted">Nom complet</div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
+                                <div class="mr-2">
+                                    <img class="rounded-circle" width="45" height="45" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" 
+                                        alt="">
+                                </div>
+                                <div class="ml-2">
+                                    <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
+                                    <div class="h7 text-muted">Nom complet</div>
+                                    <div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -211,14 +227,14 @@
                 }
 
             
-            while ( $donnees2 = $reponse->fetch() ) {                                ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
+            while ( $donnees2 = $reponse->fetch() ) {      ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
 
                 echo '<div class="geser gedf-card bg-dark text-white">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="30" src="https://picsum.photos/50/50" alt="">
+                                        <img class="rounded-circle" width="30" height="30" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" alt="">
                                     </div>
                                     <div class="ml-2">
                                         <div class="h6 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>
@@ -241,6 +257,22 @@
             echo '</div>';
 
         }
+    }
+
+    ///////////////////////////////////////////////////////
+    ////////// Fil d'actualité (PHOTO DE PROFIL) /////////
+    /////////////////////////////////////////////////////
+
+    function photodeprofil ( $db, $user ) {
+        $req = $db->prepare( 'SELECT * FROM utilisateur WHERE idUtilisateur = :idut' );
+        $req->execute(array(
+
+            'idut' => $user
+
+        ));
+        $donnees = $req->fetch();
+
+        return $donnees['photodeprofil'];
     }
 
     ///////////////////////////////////////////////////////
@@ -300,7 +332,8 @@
             }
             echo        '<div class="chat_people">
                             <div class="chat_img"> 
-                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> 
+                                <img class="rounded-circle" width="45" height="45" 
+                                    src="'.photodeprofil( $db, $donnees['idUtilisateur2']).'" alt="sunil"> 
                             </div>
                             <div class="chat_ib">
                                 <h5>'.$donnees['prenom'].' '.$donnees['nom'].'<span class="chat_date">DATE</span></h5>
@@ -351,7 +384,8 @@
 
             } else if ( $donnees['Envoyeur'] == $ut2 AND $donnees['Recepteur'] == $ut1 ) {
                 echo'<div class="incoming_msg">
-                        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                        <div class="incoming_msg_img"><img class="rounded-circle" width="45" height="45"
+                            src="'.photodeprofil( $db, $donnees['Envoyeur']).'" alt="sunil"></div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
                                     <p>'.$donnees['Messagecontent'].'</p>

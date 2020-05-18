@@ -7,7 +7,8 @@
 
 if ( isset( $_POST['inscription'] ) == TRUE ){
 
-    inscription( $_POST['email'], $_POST['password'], $_POST['ipassword'], $_POST['prenom'], $_POST['nom'], $db );
+    inscription( $_POST['email'], $_POST['password'], $_POST['ipassword'], $_POST['prenom'],
+                 $_POST['nom'], $db, $_FILES['profilepicture']['name'], $_FILES['profilepicture']['tmp_name'] );
 }
 
 ?>
@@ -82,6 +83,18 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                                     </ul> 
                                 </div>
 
+    <form method ="POST" enctype="multipart/form-data">
+        <article class="container"> <!-- Inscription -->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="inscription">
+                        <p><h3><i class="fa fa-shield"></i> Créer un compte</h3></p>
+                        <hr>
+                        <div class="form-group">
+                            <label class="control-label" for="">Adresse e-mail</label>
+                            <input type="email" class="form-control bg-dark text-white" name ="email" placeholder="Adresse e-mail" required>
+                        </div>
+
                                 <hr class="border border-secondary">
                                 <div class="form-group">
                                     <label class="control-label" for="">Adresse e-mail</label>
@@ -129,6 +142,19 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                                 <span>Description</span>
                             </div>-->
                         </div>
+<<<<<<< HEAD
+=======
+
+                        <div class="form-group">
+                            <label class="control-label" for="">Photo de profil</label>
+                            <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
+                        </div>
+                    </div>               
+                <div style="height:10px;"></div>
+                    <div class="form-group">
+                        <label class="control-label" for=""></label>
+                        <input type="submit" class="btn btn-light" name="inscription" value="Inscription">
+>>>>>>> 25aa9385d72ff6a8406cd145f3ee160cb101b42c
                     </div>
                 </article>
             </form>
