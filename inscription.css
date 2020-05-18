@@ -3,8 +3,6 @@ body {
     background: #1C1C1C;
 }
 
-/*BARRE ONGLET*/
-
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
 .navbar-icon-top .navbar-nav .nav-link > .fa {
@@ -70,14 +68,14 @@ body {
     padding-bottom: 0;
   }
 
-  .h7 {
-      font-size: 0.8rem;
-  }
-
-  .gedf-wrapper {
-      margin-top: 0.97rem;
-  }
+.h7 {
+    font-size: 0.8rem;
 }
+
+.gedf-wrapper {
+    margin-top: 0.97rem;
+}
+
 @media (min-width: 992px) {
     .gedf-main {
         padding-left: 4rem;
@@ -88,49 +86,64 @@ body {
     }
 }
 
-/**Reset Bootstrap*/
+/*ETAPES*/
 
-.dropdown-toggle::after {
-    content: none;
-    display: none;
-}
-
-.title {
-    font-size: 14px;
-    font-weight:bold;
-}
-.komen {
-    font-size:14px;
-}
-.geser {
-    margin-left:40px;
-    margin-top:5px;
-}
-
-/*MENU DEROULANT*/
-
-.list-group > .list-group {
-    display: none;
-    margin-bottom: 0;
-}
-
-.list-group-item:focus-within + .list-group {
+.step {
+    list-style: none;
+    margin: .2rem 0;
+    width: 100%;
+  }
+  
+  .step .step-item {
+    -ms-flex: 1 1 0;
+    flex: 1 1 0;
+    margin-top: 0;
+    min-height: 1rem;
+    position: relative; 
+    text-align: center;
+  }
+  
+  .step .step-item:not(:first-child)::before {
+    background: #0069d9;
+    content: "";
+    height: 2px;
+    left: -50%;
+    position: absolute;
+    top: 9px;
+    width: 100%;
+  }
+  
+  .step .step-item a {
+    color: #acb3c2;
+    display: inline-block;
+    padding: 20px 10px 0;
+    text-decoration: none;
+  }
+  
+  .step .step-item a::before {
+    background: #0069d9;
+    border: .1rem solid #fff;
+    border-radius: 50%;
+    content: "";
     display: block;
-}
+    height: .9rem;
+    left: 50%;
+    position: absolute;
+    top: .2rem;
+    transform: translateX(-50%);
+    width: .9rem;
+    z-index: 1;
+  }
   
-.list-group > .list-group-item {
-    border-radius: 0;
-    border-width: 1px 0 0 0;
-}
+  .step .step-item.active a::before {
+    background: #fff;
+    border: .1rem solid #0069d9;
+  }
   
-.list-group > .list-group-item:first-child {
-  border-top-width: 0;
-}
-
-.list-group  > .list-group > .list-group-item {
-  padding-left: 2.5rem;
-}
-
-.btn-space {
-  margin-right: 50px;
-}
+  .step .step-item.active ~ .step-item::before {
+    background: #e7e9ed;
+  }
+  
+  .step .step-item.active ~ .step-item a::before {
+    background: #e7e9ed;
+  }
