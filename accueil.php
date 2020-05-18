@@ -1,4 +1,5 @@
 <?php 
+
     session_start();
     include( 'BDD.php' );
     require ( 'fonctions.php' );
@@ -12,6 +13,7 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
 }
 
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -50,19 +52,18 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </header>
-    </form>
+                </header>
+            </form>
     <?php 
     
         if ( isset( $_POST['connexion'] ) == TRUE ){
 
-                    connexion( $_POST['coemail'], $_POST['copassword'], $db );
+            connexion( $_POST['coemail'], $_POST['copassword'], $db );
 
-                }
+        }
 
-            ?>
+    ?>
+
     <form method ="POST" enctype="multipart/form-data">
         <article class="container"> <!-- Inscription -->
             <div class="row">
@@ -108,12 +109,18 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                             <label class="control-label" for="">Confirmer le mot de passe</label>
                             <input type="password" class="form-control bg-dark text-white" name ="ipassword" placeholder="Mot de passe" required>
                         </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="">Photo de profil</label>
+                            <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
+                        </div>
                     </div>               
                     <div style="height:10px;"></div>
                     <div class="form-group">
                         <label class="control-label" for=""></label>
                         <input type="submit" class="btn btn-light" name="inscription" value="Inscription">
                     </div>
+                    
                 </div> 
                 
                 <div class="col-sm-8">
@@ -131,18 +138,7 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                         <span>Description</span>
                     </div>-->
                 </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="">Photo de profil</label>
-                    <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
-                </div>
             </div>               
-            <div style="height:10px;"></div>
-                <div class="form-group">
-                    <label class="control-label" for=""></label>
-                    <input type="submit" class="btn btn-light" name="inscription" value="Inscription">
-                </div>
-            </div>
         </article>
     </form>
 

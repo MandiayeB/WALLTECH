@@ -162,11 +162,6 @@
             echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="mr-2">
-                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
-                                <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
-                                <div class="h7 text-muted">Nom complet</div>
-                            </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="mr-2">
                                     <img class="rounded-circle" width="45" height="45" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" 
