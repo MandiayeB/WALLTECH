@@ -7,7 +7,8 @@
 
 if ( isset( $_POST['inscription'] ) == TRUE ){
 
-    inscription( $_POST['email'], $_POST['password'], $_POST['ipassword'], $_POST['prenom'], $_POST['nom'], $db );
+    inscription( $_POST['email'], $_POST['password'], $_POST['ipassword'], $_POST['prenom'],
+                 $_POST['nom'], $db, $_FILES['profilepicture']['name'], $_FILES['profilepicture']['tmp_name'] );
 }
 
 ?>
@@ -60,7 +61,7 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
         }
 
     ?>
-    <form method ="POST">
+    <form method ="POST" enctype="multipart/form-data">
         <article class="container"> <!-- Inscription -->
             <div class="row">
                 <div class="col-sm-4">
@@ -90,6 +91,11 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                         <div class="form-group">
                             <label class="control-label" for="">Confirmer le mot de passe</label>
                             <input type="password" class="form-control bg-dark text-white" name ="ipassword" placeholder="Mot de passe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="">Photo de profil</label>
+                            <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
                         </div>
                     </div>               
                 <div style="height:10px;"></div>
