@@ -21,7 +21,7 @@
                 $hasher = password_hash($password,PASSWORD_BCRYPT);
                 $name_file = $filename;
                 $tmp_name = $tmpname;
-                $local_image = "C:\wamp64\www\Walltech\images/";
+                $local_image = "C:/xampp/htdocs/Walltech/images/";
                 $chemin = "images/".$name_file;
                 move_uploaded_file ( $tmp_name , $local_image.$name_file);
                 
@@ -412,13 +412,14 @@
         $q-> execute( ['email'=>$email] );
         $result = $q -> fetch();
         
-        if ( $result['motdepasse'] == $motdepasse) {
+        if (password_verify($motdepasse,$result['motdepasse'])) {
 
             if( $confirme != "" ){    
         
                 if( $confirme == $iconfirme ){
 
                     $f =$db -> prepare( "UPDATE utilisateur SET motdepasse = :mdp WHERE email = :email" );
+                    $iconfirme = password_hash($iconfirme, PASSWORD_BCRYPT);
                     $f -> execute ([
                         'email'=>$email,
                         'mdp'=>$iconfirme
