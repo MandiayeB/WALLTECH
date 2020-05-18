@@ -17,6 +17,8 @@
 
         else {
             if ( $ipassword == $password ){
+
+                $hasher = password_hash($password,PASSWORD_BCRYPT);
                 
                 $i = $db->prepare ( "INSERT INTO utilisateur ( email, motdepasse, prenom, nom ) 
                                         VALUES ( :email,:motdepasse,:prenom,:nom )" );
@@ -24,7 +26,7 @@
                 $i -> execute ([
 
                 'email' => $email,
-                'motdepasse'=>$password,
+                'motdepasse'=>$hasher,
                 'prenom'=>$prenom,
                 'nom'=>$nom
                 
@@ -36,7 +38,7 @@
                 $t -> execute ([
 
                 'email' => $email,
-                'motdepasse'=>$password,
+                'motdepasse'=>$hasher,
                 'prenom'=>$prenom,
                 'nom'=>$nom
                 
@@ -60,24 +62,30 @@
         $q = $db->prepare( "SELECT * FROM utilisateur WHERE email = :email" );
         $q -> execute( ['email'=>$email] );
 
-        while ( $user = $q->fetch() ) {
+        $user = $q->fetch();
+        
+        //if($password == $user['motdepasse']){
 
-            if ( $user['motdepasse'] == $password ){
+        if (password_verify($password, $user["motdepasse"])){
 
-                $_SESSION['prenom'] = $user['prenom'];
-                $_SESSION['nom'] = $user['nom'];
-                $_SESSION['idut'] = $user['idUtilisateur'];
-                $_SESSION['email'] = $email;
-                header("Location:filactualites.php");
-            }
-
-            else {
-
-                echo " <br> identifiant incorrect <br> ";
-            
-            }
+            $_SESSION['prenom'] = $user['prenom'];
+            $_SESSION['nom'] = $user['nom'];
+            $_SESSION['idut'] = $user['idUtilisateur'];
+            $_SESSION['email'] = $email;
+            header("Location:filactualites.php");
         }
 
+        else {
+            echo $user['motdepasse']."<br>";
+            var_dump($email);
+            var_dump($password);
+            var_dump($user['motdepasse']);
+            var_dump (password_verify($password, $user['motdepasse']));
+            echo " <br> identifiant incorrect <br> ";
+        
+        }
+    
+    
     }
 
     ///////////////////////////////////////////////////////

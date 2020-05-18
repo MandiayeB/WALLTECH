@@ -54,7 +54,7 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
     <?php 
     
         if ( isset( $_POST['connexion'] ) == TRUE ){
-
+    
             connexion( $_POST['coemail'], $_POST['copassword'], $db );
 
         }
