@@ -42,11 +42,7 @@
                 
                 ]);
 
-<<<<<<< HEAD
-                header("Location:inscription.php");
-=======
                 header( "Location:accueil.php" );
->>>>>>> 04a0bd079073b3c50355a25c68eff41b6b21c1e7
             }
             else {
                 echo " Les mots de passes sont incorrects ";
