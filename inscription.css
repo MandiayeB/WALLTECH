@@ -1,0 +1,149 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: #1C1C1C;
+}
+
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+
+  position: relative;
+  width: 36px;
+  font-size: 24px;
+}
+
+.navbar-brand {
+  font-family: 'Bahnschrift', sans-serif;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+  
+  font-size: 0.75rem;
+  position: absolute;
+  right: 0;
+  font-family: sans-serif;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+
+  top: 3px;
+  line-height: 12px;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+
+  top: -10px;
+}
+
+@media (min-width: 576px) {
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+.h7 {
+    font-size: 0.8rem;
+}
+
+.gedf-wrapper {
+    margin-top: 0.97rem;
+}
+
+@media (min-width: 992px) {
+    .gedf-main {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+    .gedf-card {
+        margin-bottom: 2.77rem;
+    }
+}
+
+/*ETAPES*/
+
+.step {
+    list-style: none;
+    margin: .2rem 0;
+    width: 100%;
+  }
+  
+  .step .step-item {
+    -ms-flex: 1 1 0;
+    flex: 1 1 0;
+    margin-top: 0;
+    min-height: 1rem;
+    position: relative; 
+    text-align: center;
+  }
+  
+  .step .step-item:not(:first-child)::before {
+    background: #0069d9;
+    content: "";
+    height: 2px;
+    left: -50%;
+    position: absolute;
+    top: 9px;
+    width: 100%;
+  }
+  
+  .step .step-item a {
+    color: #acb3c2;
+    display: inline-block;
+    padding: 20px 10px 0;
+    text-decoration: none;
+  }
+  
+  .step .step-item a::before {
+    background: #0069d9;
+    border: .1rem solid #fff;
+    border-radius: 50%;
+    content: "";
+    display: block;
+    height: .9rem;
+    left: 50%;
+    position: absolute;
+    top: .2rem;
+    transform: translateX(-50%);
+    width: .9rem;
+    z-index: 1;
+  }
+  
+  .step .step-item.active a::before {
+    background: #fff;
+    border: .1rem solid #0069d9;
+  }
+  
+  .step .step-item.active ~ .step-item::before {
+    background: #e7e9ed;
+  }
+  
+  .step .step-item.active ~ .step-item a::before {
+    background: #e7e9ed;
+  }

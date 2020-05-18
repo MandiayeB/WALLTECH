@@ -63,115 +63,102 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                 }
 
             ?>
-            <form method ="POST">
-                <article class="container"> <!-- Inscription -->
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="inscription">
-                                <p><h3><i class="fa fa-shield"></i> Créer un compte</h3></p>
-                                <div class="container">
-                                    <ul class="step d-flex flex-nowrap">
-                                        <li class="step-item active">
-                                            <a href="#!" class="">Étape 1</a>
-                                        </li>
-                                        <li class="step-item">
-                                            <a href="#!" class="">Étape 2</a>
-                                        </li>
-                                        <li class="step-item">
-                                            <a href="#!" class="">Étape 3</a>
-                                        </li>
-                                    </ul> 
-                                </div>
-
     <form method ="POST" enctype="multipart/form-data">
         <article class="container"> <!-- Inscription -->
             <div class="row">
                 <div class="col-sm-4">
                     <div class="inscription">
                         <p><h3><i class="fa fa-shield"></i> Créer un compte</h3></p>
-                        <hr>
+                        <div class="container">
+                            <ul class="step d-flex flex-nowrap">
+                                <li class="step-item active">
+                                    <a href="#!" class="">Étape 1</a>
+                                </li>
+                                <li class="step-item">
+                                    <a href="#!" class="">Étape 2</a>
+                                </li>
+                                <li class="step-item">
+                                    <a href="#!" class="">Étape 3</a>
+                                </li>
+                            </ul> 
+                        </div>
+
+                        <hr class="border border-secondary">
                         <div class="form-group">
                             <label class="control-label" for="">Adresse e-mail</label>
                             <input type="email" class="form-control bg-dark text-white" name ="email" placeholder="Adresse e-mail" required>
                         </div>
 
-                                <hr class="border border-secondary">
-                                <div class="form-group">
-                                    <label class="control-label" for="">Adresse e-mail</label>
-                                    <input type="email" class="form-control bg-dark text-white" name ="email" placeholder="Adresse e-mail" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label" for="">Nom</label>
-                                    <input type="text" class="form-control bg-dark text-white" name ="nom" placeholder="Nom" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label" for="">Prénom</label>
-                                    <input type="text" class="form-control bg-dark text-white" name ="prenom"placeholder="Prénom" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label" for="">Mot de passe</label>
-                                    <input type="password" class="form-control bg-dark text-white" name ="password" placeholder="Mot de passe" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label" for="">Confirmer le mot de passe</label>
-                                    <input type="password" class="form-control bg-dark text-white" name ="ipassword" placeholder="Mot de passe" required>
-                                </div>
-                            </div>               
-                        <div style="height:10px;"></div>
-                            <div class="form-group">
-                                <label class="control-label" for=""></label>
-                                <input type="submit" class="btn btn-light" name="inscription" value="Inscription">
-                            </div>
-                        </div> 
-                        <div class="col-sm-8">
-                            <!--<div class="login-main">
-                                <h4><i class="fa fa-dashboard"></i>Exemple</h4>
-                                <span>Description</span>
-            
-                                <h4> <i class="fa fa-money"></i>Exemple</h4>
-                                <span>Description</span>
-            
-                                <h4><i class="fa fa-mobile-phone"></i>Exemple</h4>
-                                <span>Description</span>
-            
-                                <h4> <i class="fa fa-trophy"></i>Exemple</h4>
-                                <span>Description</span>
-                            </div>-->
+                        <div class="form-group">
+                            <label class="control-label" for="">Nom</label>
+                            <input type="text" class="form-control bg-dark text-white" name ="nom" placeholder="Nom" required>
                         </div>
-<<<<<<< HEAD
-=======
 
                         <div class="form-group">
-                            <label class="control-label" for="">Photo de profil</label>
-                            <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
+                            <label class="control-label" for="">Prénom</label>
+                            <input type="text" class="form-control bg-dark text-white" name ="prenom"placeholder="Prénom" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="">Mot de passe</label>
+                            <input type="password" class="form-control bg-dark text-white" name ="password" placeholder="Mot de passe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="">Confirmer le mot de passe</label>
+                            <input type="password" class="form-control bg-dark text-white" name ="ipassword" placeholder="Mot de passe" required>
                         </div>
                     </div>               
-                <div style="height:10px;"></div>
+                    <div style="height:10px;"></div>
                     <div class="form-group">
                         <label class="control-label" for=""></label>
                         <input type="submit" class="btn btn-light" name="inscription" value="Inscription">
->>>>>>> 25aa9385d72ff6a8406cd145f3ee160cb101b42c
                     </div>
-                </article>
-            </form>
-
-            <footer class="container">
-                <hr class="border border-secondary">
-                <div class="footer-options">
-                    <ul >
-                        <li>
-                            <a href="https://www.intechinfo.fr/">
-                                <img src="intech.png" alt="" width="150"/>
-                            </a>
-                        </li>
-                    </ul>
+                </div> 
+                
+                <div class="col-sm-8">
+                    <!--<div class="login-main">
+                        <h4><i class="fa fa-dashboard"></i>Exemple</h4>
+                        <span>Description</span>
+    
+                        <h4> <i class="fa fa-money"></i>Exemple</h4>
+                        <span>Description</span>
+    
+                        <h4><i class="fa fa-mobile-phone"></i>Exemple</h4>
+                        <span>Description</span>
+    
+                        <h4> <i class="fa fa-trophy"></i>Exemple</h4>
+                        <span>Description</span>
+                    </div>-->
                 </div>
-                <div style="clear:both"></div>
-                <!-- <small class="copyrights"> © Copyrights reserved 2020</small> -->
-            </footer>
-        </body>
-    </html>
+
+                <div class="form-group">
+                    <label class="control-label" for="">Photo de profil</label>
+                    <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
+                </div>
+            </div>               
+            <div style="height:10px;"></div>
+                <div class="form-group">
+                    <label class="control-label" for=""></label>
+                    <input type="submit" class="btn btn-light" name="inscription" value="Inscription">
+                </div>
+            </div>
+        </article>
+    </form>
+
+        <footer class="container">
+            <hr class="border border-secondary">
+            <div class="footer-options">
+                <ul >
+                    <li>
+                        <a href="https://www.intechinfo.fr/">
+                            <img src="intech.png" alt="" width="150"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div style="clear:both"></div>
+            <!-- <small class="copyrights"> © Copyrights reserved 2020</small> -->
+        </footer>
+    </body>
+</html>
