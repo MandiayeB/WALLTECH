@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>walltech - Fil d'actualités</title>
+        <title>walltech - Inscription</title>
         <link rel="stylesheet" href="bootstrap.min.css">
         <link rel="stylesheet" href="inscription.css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -44,19 +44,24 @@
                 </ul>
         
                 <div class="mt-5 mb-5 text-center text-white">
-                    <h5>Séléctionner votre rôle :</h5>
+                    <h5>Sélectionnez votre classe :</h5>
                 </div>
-                <select class="form-control d-flex flex-nowrap">
-                    <optgroup label="Élève">
-                        <option value="eleve">Élève</option>
-                        <option value="elevebde">Élève BDE</option>
-                    </optgroup>
-                    <optgroup label="Professeur">
-                        <option value="prof">Professeur</option>
-                    </optgroup>
-                </select>
-                <p>
                 <form method="POST">
+                    <select class="form-control d-flex flex-nowrap">
+                        <optgroup label="Élève">
+                            <option value="sem1">Semestre 1</option>
+                            <option value="sem2">Semestre 2</option>
+                            <option value="sem3">Semestre 3</option>
+                        </optgroup>
+                        <optgroup label="Professeur">
+                            <option value="profs1">Professeur S1</option>
+                            <option value="profs2">Professeur S2</option>
+                            <option value="profs3">Professeur S3</option>
+                        </optgroup>
+                    </select>
+                    </br>
+                    <input type="file" class="custom-file-input " name ="profilepicture" required>
+                    </br>
                     <button type="button" class="btn btn-secondary">Confirmer</button>
                 </form>
             </div>
