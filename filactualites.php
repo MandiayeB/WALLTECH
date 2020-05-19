@@ -5,7 +5,15 @@
 
     if ( isset( $_POST['publier'] ) ) {
                         
-        postfile( $_POST['post'], $_SESSION['idut'], $db );
+        if ( !empty( $_FILES['img']['name'] ) ) {
+            
+            postfile( $_POST['post'], $_SESSION['idut'], $db, $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
+
+        } else {
+
+            postfile( $_POST['post'], $_SESSION['idut'], $db, false, false, false);
+        
+        }
     
     }
 
@@ -79,7 +87,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <form method = 'POST'>
+                    <form method = 'POST' enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
@@ -103,11 +111,10 @@
                                 <div class="btn-group">
                                     <input type="submit" name='publier' class="btn btn-light" value='Publier'>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
-
+                    </form>
                     <?php 
                         
                     afficherfile( $db, $_SESSION['idut'] );

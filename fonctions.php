@@ -95,12 +95,27 @@
     ///////////// Fil d'actualité (PUBLIER) //////////////
     /////////////////////////////////////////////////////
     
-    function postfile ( $texte, $user, $db ) {
+    function postfile ( $texte, $user, $db, $filename, $tmpname, $test) {
 
-        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur ) VALUES ( :post, :utilisateur )' );
+        if ( $test ) {
+
+            $name_file = $filename;
+            $tmp_name = $tmpname;
+            $local_image = "C:/wamp64/www/Walltech/images/";
+            $chemin = "images/".$name_file;
+            move_uploaded_file ( $tmp_name , $local_image.$name_file);
+
+        } else {
+
+            $chemin = 'non';
+
+        }
+
+        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img ) VALUES ( :post, :utilisateur, :img )' );
         $req->execute(array(
             'post' => $texte,
-            'utilisateur' => $user
+            'utilisateur' => $user,
+            'img' => $chemin
         ));
         $req->closeCursor();
         header( "Location: publication.php" );
@@ -179,8 +194,14 @@
                         </div>
                     </div>
                     
-                    <div class="card-body">
-                        <p class="card-text">'.$donnees['post'].'</p>
+                    <div class="card-body">';
+
+            if( $donnees['img'] != 'non' ) {
+
+                echo '<img width="200" height="175" src="'.$donnees['img'].'" alt="">';
+
+            }
+                    echo     '<p class="card-text">'.$donnees['post'].'</p>
                     </div>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
