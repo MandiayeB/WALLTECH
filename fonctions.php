@@ -1,10 +1,10 @@
 <?php 
 
     ///////////////////////////////////////////////////////
-    //////////////// Creation d'un compte ////////////////
+    ////////////// Creation d'un compte (1) //////////////
     /////////////////////////////////////////////////////
 
-    function inscription ( $email, $password, $ipassword, $prenom, $nom, $db, $filename, $tmpname ){
+    function inscription ( $email, $password, $ipassword, $prenom, $nom, $db ){
 
         $q = $db -> prepare ( "SELECT * FROM utilisateur WHERE email = :email" );
         $q -> execute ( ['email'=>$email] );
@@ -19,39 +19,34 @@
             if ( $ipassword == $password ){
 
                 $hasher = password_hash($password,PASSWORD_BCRYPT);
-                $name_file = $filename;
-                $tmp_name = $tmpname;
-                $local_image = "C:/wamp64/www/Walltech/images/";
-                $chemin = "images/".$name_file;
-                move_uploaded_file ( $tmp_name , $local_image.$name_file);
-                
-                $i = $db->prepare ( "INSERT INTO utilisateur ( email, motdepasse, prenom, nom, photodeprofil ) 
-                                        VALUES ( :email, :motdepasse, :prenom, :nom, :photo )" );
+
+                $_SESSION['email'] = $email;
+
+                $i = $db->prepare ( "INSERT INTO utilisateur ( email, motdepasse, prenom, nom ) 
+                                        VALUES ( :email, :motdepasse, :prenom, :nom )" );
 
                 $i -> execute ([
 
                 'email' => $email,
                 'motdepasse' => $hasher,
                 'prenom' => $prenom,
-                'nom' => $nom,
-                'photo' => $chemin
+                'nom' => $nom
                 
                 ]);
 
-                $t = $db->prepare ( "INSERT INTO utilisateur2 ( email, motdepasse, prenom, nom, photodeprofil) 
-                                        VALUES ( :email, :motdepasse, :prenom, :nom, :photo )" );
+                $t = $db->prepare ( "INSERT INTO utilisateur2 ( email, motdepasse, prenom, nom ) 
+                                        VALUES ( :email, :motdepasse, :prenom, :nom )" );
 
                 $t -> execute ([
 
                 'email' => $email,
                 'motdepasse' => $hasher,
                 'prenom' => $prenom,
-                'nom' => $nom,
-                'photo' => $chemin
+                'nom' => $nom
                 
                 ]);
 
-                header( "Location:accueil.php" );
+                header( "Location:inscription.php" );
             }
             else {
                 echo " Les mots de passes sont incorrects ";
@@ -60,6 +55,93 @@
 
     }
     
+    ///////////////////////////////////////////////////////
+    ////////////// Creation d'un compte (2) //////////////
+    /////////////////////////////////////////////////////
+
+    function final_inscription ( $db, $filename, $tmpname, $email, $role ) {
+
+        $name_file = $filename;
+        $tmp_name = $tmpname;
+        $local_image = "C:/wamp64/www/Walltech/images/";
+        $chemin = "images/".$name_file;
+        move_uploaded_file ( $tmp_name , $local_image.$name_file );
+
+        $req = $db -> prepare( 'UPDATE utilisateur SET photodeprofil = :img WHERE email = :email' );
+        $req -> execute([
+            'img' => $chemin,
+            'email' => $email
+        ]);
+
+        $req2 = $db -> prepare( 'UPDATE utilisateur2 SET photodeprofil = :img WHERE email = :email' );
+        $req2 -> execute([
+            'img' => $chemin,
+            'email' => $email
+        ]);
+        
+        $id = $db -> prepare( 'SELECT * FROM utilisateur WHERE email = :email' );
+        $id -> execute([
+            'email' => $email
+        ]);
+        $data = $id -> fetch();
+
+        if ( $role == 'sem1' ) {
+            
+            $sem1 = $db -> prepare( 'INSERT INTO semestre1( Utilisateur ) VALUES ( :user )' );
+            $sem1 -> execute([
+                'user' => $data['idUtilisateur']
+            ]);
+
+        } else if ( $role == 'sem2' ) {
+            
+            $sem2 = $db -> prepare( 'INSERT INTO semestre2( Utilisateur ) VALUES ( :user )' );
+            $sem2 -> execute([
+                'user' => $data['idUtilisateur']
+            ]);
+            
+        } else if ( $role == 'sem3' ) {
+            
+            $sem3 = $db -> prepare( 'INSERT INTO semestre3( Utilisateur ) VALUES ( :user )' );
+            $sem3 -> execute([
+                'user' => $data['idUtilisateur']
+            ]);
+            
+        }
+
+        if ( $role == 'profs1' ) {
+            
+            $prof1 = $db -> prepare( 'INSERT INTO semestre1( Utilisateur, prof ) VALUES ( :user, :prof )' );
+            $prof1 -> execute([
+                'user' => $data['idUtilisateur'],
+                'prof' => 1
+            ]);
+            
+        } else if ( $role == 'profs2' ) {
+            
+            $prof2 = $db -> prepare( 'INSERT INTO semestre2( Utilisateur, prof ) VALUES ( :user, :prof )' );
+            $prof2 -> execute([
+                'user' => $data['idUtilisateur'],
+                'prof' => 1
+            ]);
+            
+        } else if ( $role == 'profs3' ) {
+            
+            $prof3 = $db -> prepare( 'INSERT INTO semestre3( Utilisateur, prof ) VALUES ( :user, :prof )' );
+            $prof3 -> execute([
+                'user' => $data['idUtilisateur'],
+                'prof' => 1
+            ]);
+            
+        }
+
+        $_SESSION['prenom'] = $data['prenom'];
+        $_SESSION['nom'] = $data['nom'];
+        $_SESSION['idut'] = $data['idUtilisateur'];
+        $_SESSION['email'] = $data['email'];
+
+        header("Location:bienvenue.php");
+    }
+
     ///////////////////////////////////////////////////////
     /////////////// Connexion d'un compte ////////////////
     /////////////////////////////////////////////////////
@@ -274,7 +356,7 @@
                                     echo'<form method="POST">
                                             <div class ="col col-lg-2">
                                                 <button type = "submit" name = "sup" value ="'.$donnees['idFil'].'" class="btn btn-light" style = "background-color: transparent; border: none;">
-                                                    <img src = "1828843.svg"  width="25px" height="25px">
+                                                    <img src = "button.png"  width="25px" height="25px">
                                                 </button>
                                             </div>
                                         </form>';
@@ -304,7 +386,7 @@
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
                             
-                            <button type="submit" name="pubcom" class="btn btn-light" style="background-color: transparent; border: none;">
+                            <button type="submit" name="pubcom" class="btn btn-light col" style="background-color: transparent; border: none;">
                                 <img src="arrow.png" width="25px" height="25px" />
                             </button>
                             <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Répondre">

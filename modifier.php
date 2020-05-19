@@ -1,7 +1,19 @@
 <?php
     session_start();
     include( 'BDD.php' );
-    require ( 'fonctions.php' );
+	require ( 'fonctions.php' );
+	
+	if ( isset ( $_POST['update'] ) ){
+
+		modifiermdp ( $_SESSION['email'], $_POST['password'], $_POST['confirm'], $_POST['iconfirm'], $db );
+
+		if ( !empty ( $_FILES['photo']['name'] ) ) {
+
+			modifierphoto ( $db, $_FILES['photo']['name'], $_FILES['photo']['tmp_name'], $_SESSION['idut'] );
+
+		}
+
+	}
 
 ?>
 <!DOCTYPE html>
@@ -88,19 +100,6 @@
 					</form>
 				</div>
 			</div>
-		</div>	
-	<?php
-		if ( isset ( $_POST['update'] ) ){
-
-			modifiermdp ( $_SESSION['email'], $_POST['password'], $_POST['confirm'], $_POST['iconfirm'], $db );
-
-			if ( !empty ( $_FILES['photo']['name'] ) ) {
-
-				modifierphoto ( $db, $_FILES['photo']['name'], $_FILES['photo']['tmp_name'], $_SESSION['idut'] );
-
-			}
-
-		}
-	?>	
+		</div>
 	</body>
 </html>

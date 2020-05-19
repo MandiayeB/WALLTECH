@@ -109,11 +109,7 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
                             <label class="control-label" for="">Confirmer le mot de passe</label>
                             <input type="password" class="form-control bg-dark text-white" name ="ipassword" placeholder="Mot de passe" required>
                         </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="">Photo de profil</label>
-                            <input type="file" class="form-control bg-dark text-white" name ="profilepicture" required>
-                        </div>
+                        
                     </div>               
                     <div style="height:10px;"></div>
                     <div class="form-group">
