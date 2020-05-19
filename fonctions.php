@@ -105,6 +105,47 @@
     }
 
     ///////////////////////////////////////////////////////
+    ///////////// Fil d'actualité (PUBLIER SONDAGE) /////////////
+    /////////////////////////////////////////////////////
+
+    function postSondage ($poll1, $poll2, $db, $texte, $user) {
+
+        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, sondage ) VALUES ( :post, :utilisateur, :sondage )' );
+        $req->execute(array(
+            'post' => $texte,
+            'utilisateur' => $user,
+            'sondage' => 1
+        ));
+        $req->closeCursor();
+
+        $req0=$db->prepare( 'SELECT * FROM filactu WHERE post = :texte AND Utilisateur = :user' );
+        $req0->execute(array(
+            'texte'=>$texte,
+            'user'=>$user
+        ));
+
+        $data=$req0->fetch();
+
+        $req1 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
+        $req1->execute(array(
+            'idFil' => $data['idFil'],
+            'choix' => 1,
+            'pollcontent' => $poll1
+        ));
+        $req1->closeCursor();
+
+        $req2 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
+        $req2 ->execute(array(
+            'idFil' => $data['idFil'],
+            'choix' => 2,
+            'pollcontent' => $poll2
+        ));
+        $req2 ->closeCursor();
+
+        header( "Location: publication.php" );    
+    }
+
+    ///////////////////////////////////////////////////////
     ///////////// Fil d'actualité (COMMENTER) ////////////
     /////////////////////////////////////////////////////
 
@@ -162,11 +203,6 @@
             echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="mr-2">
-                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
-                                <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>
-                                <div class="h7 text-muted">Nom complet</div>
-                            </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="mr-2">
                                     <img class="rounded-circle" width="45" height="45" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" 
