@@ -193,15 +193,17 @@
                                 </div>
                                 
                             </div>';
+
                                 if ($user == $donnees['idUtilisateur']) {
                                     
-                                echo'<form method="POST">
-                                    <div class ="col col-lg-2">
-                                        <button type = "submit" name = "sup" value ="'.$donnees['idFil'].'" class="btn btn-light" style = "background-color: transparent; border: none;">
-                                            <img src = "1828843.svg"  width="30px" height="30px">
-                                        </button>
-                                    </div>
-                                    </form>';
+                                    echo'<form method="POST">
+                                            <div class ="col col-lg-2">
+                                                <button type = "submit" name = "sup" value ="'.$donnees['idFil'].'" class="btn btn-light" style = "background-color: transparent; border: none;">
+                                                    <img src = "1828843.svg"  width="25px" height="25px">
+                                                </button>
+                                            </div>
+                                        </form>';
+
                                 }
                             
                     echo '</div>
@@ -274,12 +276,14 @@
                                         <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees2['heureCom'].'</div>
                                     </div>
                                 </div>';
+                                
                                 if ($user == $donnees2['Utilisateur']) {
                                 
                                     echo'<div class ="col col-lg-2"> 
-                                            <img src = "1077012.png"  width="30px" height="30px class="btn btn-light" style = "background-color: transparent; border: none;">
+                                            <img src = "1077012.png"  width="25px" height="25px class="btn btn-light" style = "background-color: transparent; border: none;">
                                         </div>';
-                                    }
+                                }
+
                         echo '</div>
                             <div class="card-body">
                                 <p class="komen">'.$donnees2['com'].'</p>
@@ -483,21 +487,19 @@
         }
     }
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////Suppression de publication/////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ////////////  Suppression de publication  ////////////
+    /////////////////////////////////////////////////////
 
-function supprimerfila($id, $db){
+    function supprimerfila($id, $db){
 
-    $q = $db -> prepare( "DELETE FROM filactu WHERE idFil = :id" );
-    $q-> execute( ['id' => $id] );
+        $z = $db -> prepare( "DELETE FROM commentaires WHERE filactu = :id" );
+        $z-> execute( ['id' => $id] );
 
-    $z = $db -> prepare( "DELETE FROM commentaires WHERE filactu = :id" );
-    $z-> execute( ['id' => $id] );
-
-
-
-}
+        $q = $db -> prepare( "DELETE FROM filactu WHERE idFil = :id" );
+        $q-> execute( ['id' => $id] );
+        
+    }
 
 
 ?>
