@@ -21,7 +21,7 @@
                 $hasher = password_hash($password,PASSWORD_BCRYPT);
                 $name_file = $filename;
                 $tmp_name = $tmpname;
-                $local_image = "C:/xampp/htdocs/Walltech/images/";
+                $local_image = "C:/wamp64/www/Walltech/images/";
                 $chemin = "images/".$name_file;
                 move_uploaded_file ( $tmp_name , $local_image.$name_file);
                 
@@ -83,11 +83,7 @@
         }
 
         else {
-            echo $user['motdepasse']."<br>";
-            var_dump($email);
-            var_dump($password);
-            var_dump($user['motdepasse']);
-            var_dump (password_verify($password, $user['motdepasse']));
+            
             echo " <br> identifiant incorrect <br> ";
         
         }
@@ -99,12 +95,27 @@
     ///////////// Fil d'actualité (PUBLIER) //////////////
     /////////////////////////////////////////////////////
     
-    function postfile ( $texte, $user, $db ) {
+    function postfile ( $texte, $user, $db, $filename, $tmpname, $test) {
 
-        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur ) VALUES ( :post, :utilisateur )' );
+        if ( $test ) {
+
+            $name_file = $filename;
+            $tmp_name = $tmpname;
+            $local_image = "C:/wamp64/www/Walltech/images/";
+            $chemin = "images/".$name_file;
+            move_uploaded_file ( $tmp_name , $local_image.$name_file);
+
+        } else {
+
+            $chemin = 'non';
+
+        }
+
+        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img ) VALUES ( :post, :utilisateur, :img )' );
         $req->execute(array(
             'post' => $texte,
-            'utilisateur' => $user
+            'utilisateur' => $user,
+            'img' => $chemin
         ));
         $req->closeCursor();
         header( "Location: publication.php" );
@@ -196,8 +207,14 @@
                     echo '</div>
                     </div>
                     
-                    <div class="card-body">
-                        <p class="card-text">'.$donnees['post'].'</p>
+                    <div class="card-body">';
+
+            if( $donnees['img'] != 'non' ) {
+
+                echo '<img width="200" height="175" src="'.$donnees['img'].'" alt="">';
+
+            }
+                    echo     '<p class="card-text">'.$donnees['post'].'</p>
                     </div>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
@@ -249,7 +266,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="30" height="30" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" alt="">
+                                        <img class="rounded-circle" width="30" height="30" src="'.photodeprofil( $db, $donnees2['idUtilisateur']).'" alt="">
                                     </div>
                                     <div class="ml-2">
                                         <div class="h6 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>
