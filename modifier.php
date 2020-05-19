@@ -83,7 +83,11 @@
 
 						<div class="form-group ">
 							<button type="submit" name="update" class="btn btn-primary btn-lg btn-block login-button">Confirmer</button>
+							
 						</div>
+					</form>
+					<form action="filactualites.php">
+					<input type ="submit" name ="retour" value ="Retour accueil"> 
 					</form>
 				</div>
 			</div>
