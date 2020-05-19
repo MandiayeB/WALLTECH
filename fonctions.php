@@ -70,8 +70,6 @@
         $q -> execute( ['email'=>$email] );
 
         $user = $q->fetch();
-        
-        //if($password == $user['motdepasse']){
 
         if (password_verify($password, $user["motdepasse"])){
 
@@ -141,7 +139,9 @@
             $chemin = 'non';
 
         }
-        
+
+        /////////////////// Création du post ///////////////////////
+
         $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, sondage, img ) VALUES ( :post, :utilisateur, :sondage, :img )' );
         $req->execute(array(
             'post' => $texte,
@@ -151,13 +151,17 @@
         ));
         $req->closeCursor();
 
-        $req0=$db->prepare( 'SELECT * FROM filactu WHERE post = :texte AND Utilisateur = :user' );
-        $req0->execute(array(
-            'texte'=>$texte,
-            'user'=>$user
-        ));
+        //////////////// Récupération de l'ID du post //////////////
 
+        $req0=$db->prepare( 'SELECT * FROM filactu WHERE post = :texte AND Utilisateur = :user AND sondage = :son' );
+        $req0->execute(array(
+            'texte' => $texte,
+            'user' => $user,
+            'son' => 1
+        ));
         $data=$req0->fetch();
+
+        //////////// Création des deux choix du sondage ////////////
 
         $req1 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
         $req1->execute(array(
@@ -202,11 +206,10 @@
 
     function afficherfile ( $db, $user ) {
         
-        //$req = $db->query('SELECT * FROM filactu ORDER BY heurepost DESC');
         $req = $db->query( 'SELECT * FROM filactu INNER JOIN utilisateur ON 
                 filactu.Utilisateur = utilisateur.idUtilisateur ORDER BY heurepost DESC' );
         
-        while ( $donnees = $req->fetch() ) {                                         /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
+        while ( $donnees = $req->fetch() ) {       /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
             
             $reponse=$db->prepare( 'SELECT * FROM commentaires INNER JOIN utilisateur ON 
                     commentaires.Utilisateur = utilisateur.idUtilisateur WHERE filactu = :filactu ORDER BY heureCom' );
@@ -214,35 +217,35 @@
                 'filactu' => $donnees['idFil']
             ));
 
-            $req2 = $db->prepare( 'SELECT COUNT(*) FROM commentaires WHERE filactu = :filactu' );
+            $req2 = $db->prepare( 'SELECT COUNT(*) FROM commentaires WHERE filactu = :filactu' ); ////// Nombre de commentaires /////
             $req2->execute(array(
                 'filactu' => $donnees['idFil']
             ));
             $data = $req2->fetch();
 
-            $req3 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil' );
+            $req3 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil' ); ////////// Nombre de like //////////
             $req3->execute(array(
                 'fil' => $donnees['idFil']
             ));
             $data2 = $req3->fetch();
 
-            $req4 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil AND Utilisateur = :user' );
+            $req4 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil AND Utilisateur = :user' ); /*Vérif like de l'utilisateur*/  
             $req4->execute(array(
                 'fil' => $donnees['idFil'],
                 'user' => $user
             ));
             $data3 = $req4->fetch();
 
-            //REPONSE DES SONDAGES//
+            //////////////REPONSE DES SONDAGES/////////////
 
-            $req5 = $db->prepare('SELECT * FROM sondage WHERE idFil = :idFil AND choix = 1');
+            $req5 = $db->prepare( 'SELECT * FROM sondage WHERE idFil = :idFil AND choix = 1' ); ////// Choix 1 /////////
             $req5->execute(array(
                 'idFil' => $donnees['idFil']
 
             ));
             $data4 = $req5->fetch();
 
-            $req6 = $db->prepare('SELECT * FROM sondage WHERE idFil = :idFil AND choix = 2');
+            $req6 = $db->prepare( 'SELECT * FROM sondage WHERE idFil = :idFil AND choix = 2' ); ////// Choix 2 /////////
             $req6->execute(array(
                 'idFil' => $donnees['idFil']
 
@@ -266,7 +269,7 @@
                                 
                             </div>';
 
-                                if ($user == $donnees['idUtilisateur']) {
+                                if ( $user == $donnees['idUtilisateur'] ) {
                                     
                                     echo'<form method="POST">
                                             <div class ="col col-lg-2">
@@ -289,14 +292,15 @@
 
             }
 
-                    echo     '<p class="card-text">'.$donnees['post'].'</p>';
+            echo     '<p class="card-text">'.$donnees['post'].'</p>';
 
-            if ($donnees['sondage'] == 1 ) {
+            if ( $donnees['sondage'] == 1 ) {
 
                 echo '<p class="card-text">Choix 1 : '.$data4['pollcontent'].'</p>
                         <p class="card-text">Choix 2 : '.$data5['pollcontent'].'</p>';
-            }        
-                    echo '</div>
+            }
+
+            echo '</div>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
                             
@@ -356,14 +360,15 @@
                                     </div>
                                 </div>';
                                 
-                                if ($user == $donnees2['Utilisateur']) {
+                                if ( $user == $donnees2['Utilisateur'] ) {
                                 
                                     echo'<div class ="col col-lg-2"> 
                                             <img src = "1077012.png"  width="25px" height="25px class="btn btn-light" style = "background-color: transparent; border: none;">
                                         </div>';
+
                                 }
 
-                        echo '</div>
+                    echo '</div>
                             <div class="card-body">
                                 <p class="komen">'.$donnees2['com'].'</p>
                             </div>
@@ -518,12 +523,12 @@
     }
 
     
-    ///////////////////////////////////////////////////////////
-    ////////////// Changement de mot de passe ////////////////
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ////////////// Changement de mot de passe ////////////
+    /////////////////////////////////////////////////////
 
 
-    function modifier ( $email, $motdepasse, $confirme, $iconfirme, $db ){
+    function modifiermdp ( $email, $motdepasse, $confirme, $iconfirme, $db ) {
 
 
         $q = $db -> prepare( "SELECT * FROM utilisateur WHERE email = :email" );
@@ -547,7 +552,6 @@
                         'email'=>$email,
                         'mdp'=>$iconfirme
                         ]);
-                    header( 'Location:modifier.php' );
 
                 }
 
@@ -567,10 +571,36 @@
     }
 
     ///////////////////////////////////////////////////////
+    //////////// Changement de photo de profil ///////////
+    /////////////////////////////////////////////////////
+
+    function modifierphoto ( $db, $filename, $tmpname, $user ) { 
+
+        $name_file = $filename;
+        $tmp_name = $tmpname;
+        $local_image = "C:/wamp64/www/Walltech/images/";
+        $chemin = "images/".$name_file;
+        move_uploaded_file ( $tmp_name , $local_image.$name_file);
+
+        $req = $db -> prepare( 'UPDATE utilisateur SET photodeprofil = :img WHERE idUtilisateur = :idUt' );
+        $req -> execute([
+            'img' => $chemin,
+            'idUt' => $user
+        ]);
+
+        $req2 = $db -> prepare( 'UPDATE utilisateur2 SET photodeprofil = :img WHERE idUtilisateur2 = :idUt' );
+        $req2 -> execute([
+            'img' => $chemin,
+            'idUt' => $user
+        ]);
+
+    }
+
+    ///////////////////////////////////////////////////////
     ////////////  Suppression de publication  ////////////
     /////////////////////////////////////////////////////
 
-    function supprimerfila($id, $db){
+    function supprimerfila ( $id, $db ){
 
         $z = $db -> prepare( "DELETE FROM commentaires WHERE filactu = :id" );
         $z-> execute( ['id' => $id] );
