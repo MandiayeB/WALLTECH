@@ -28,6 +28,12 @@
         likepost( $db, $_POST['idFil'], $_SESSION['idut'] );
     
     }
+
+    if( isset( $_POST['sup'] ) ) {
+
+        supprimerfila( $_POST['sup'], $db );
+        
+    }
 ?>
 <!DOCTYPE html>
 <html>
