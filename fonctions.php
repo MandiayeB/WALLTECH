@@ -126,13 +126,28 @@
     ///////////// Fil d'actualité (PUBLIER SONDAGE) /////////////
     /////////////////////////////////////////////////////
 
-    function postSondage ($poll1, $poll2, $db, $texte, $user) {
+    function postSondage ($poll1, $poll2, $db, $texte, $user, $filename, $tmpname, $test) {
 
-        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, sondage ) VALUES ( :post, :utilisateur, :sondage )' );
+        if ( $test ) {
+
+            $name_file = $filename;
+            $tmp_name = $tmpname;
+            $local_image = "C:/wamp64/www/Walltech/images/";
+            $chemin = "images/".$name_file;
+            move_uploaded_file ( $tmp_name , $local_image.$name_file);
+
+        } else {
+
+            $chemin = 'non';
+
+        }
+        
+        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, sondage, img ) VALUES ( :post, :utilisateur, :sondage, :img )' );
         $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
-            'sondage' => 1
+            'sondage' => 1,
+            'img' => $chemin
         ));
         $req->closeCursor();
 
@@ -217,6 +232,22 @@
                 'user' => $user
             ));
             $data3 = $req4->fetch();
+
+            //REPONSE DES SONDAGES//
+
+            $req5 = $db->prepare('SELECT * FROM sondage WHERE idFil = :idFil AND choix = 1');
+            $req5->execute(array(
+                'idFil' => $donnees['idFil']
+
+            ));
+            $data4 = $req5->fetch();
+
+            $req6 = $db->prepare('SELECT * FROM sondage WHERE idFil = :idFil AND choix = 2');
+            $req6->execute(array(
+                'idFil' => $donnees['idFil']
+
+            ));
+            $data5 = $req6->fetch();
             
             echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
@@ -242,8 +273,15 @@
                 echo '<img width="200" height="175" src="'.$donnees['img'].'" alt="">';
 
             }
-                    echo     '<p class="card-text">'.$donnees['post'].'</p>
-                    </div>
+
+                    echo     '<p class="card-text">'.$donnees['post'].'</p>';
+
+            if ($donnees['sondage'] == 1 ) {
+
+                echo '<p class="card-text">Choix 1 : '.$data4['pollcontent'].'</p>
+                        <p class="card-text">Choix 2 : '.$data5['pollcontent'].'</p>';
+            }        
+                    echo '</div>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
                             

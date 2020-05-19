@@ -5,7 +5,15 @@
 
     if ( !empty($_POST['pollcontent'])) {
 
-        postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut']);
+        if ( !empty( $_FILES['img']['name'] ) ) {
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
+
+        } else {
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], false, false, false);
+
+        }
 
     } else if ( isset( $_POST['publier'] ) ) {
                         
