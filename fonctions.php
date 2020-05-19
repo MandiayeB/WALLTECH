@@ -83,11 +83,7 @@
         }
 
         else {
-            echo $user['motdepasse']."<br>";
-            var_dump($email);
-            var_dump($password);
-            var_dump($user['motdepasse']);
-            var_dump (password_verify($password, $user['motdepasse']));
+            
             echo " <br> identifiant incorrect <br> ";
         
         }
@@ -236,7 +232,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="30" height="30" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" alt="">
+                                        <img class="rounded-circle" width="30" height="30" src="'.photodeprofil( $db, $donnees2['idUtilisateur']).'" alt="">
                                     </div>
                                     <div class="ml-2">
                                         <div class="h6 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>
