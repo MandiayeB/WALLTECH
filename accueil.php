@@ -54,6 +54,7 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
             </div>
         </header>
     </form>
+    
     <?php 
     
         if ( isset( $_POST['connexion'] ) == TRUE ){
@@ -62,7 +63,8 @@ if ( isset( $_POST['inscription'] ) == TRUE ){
 
                 }
 
-            ?>
+    ?>
+
     <form method ="POST" enctype="multipart/form-data">
         <article class="container"> <!-- Inscription -->
             <div class="row">
