@@ -2,19 +2,13 @@
     session_start();
     include('BDD.php');
     require ('fonctions.php');
-
-    if ( isset( $_POST['perfect'] ) ) {
-
-        final_inscription ( $db, $_FILES['photo']['name'], $_FILES['photo']['tmp_name'], $_SESSION['email'], $_POST['role'] );
-    
-    }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>walltech - Inscription</title>
+        <title>walltech - Bienvenue</title>
         <link rel="stylesheet" href="bootstrap.min.css">
         <link rel="stylesheet" href="inscription.css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -41,48 +35,20 @@
                     <li class="step-item">
                         <a href="#!" class="">Étape 1</a>
                     </li>
-                    <li class="step-item active">
+                    <li class="step-item">
                         <a href="#!" class="">Étape 2</a>
                     </li>
-                    <li class="step-item">
+                    <li class="step-item active">
                         <a href="#!" class="">Étape 3</a>
                     </li>
                 </ul>
-            <form method="POST" enctype="multipart/form-data">
+        
                 <div class="mt-5 mb-5 text-center text-white">
-                    <h5>Sélectionnez votre photo de profil :</h5>
+                    <h5>Bienvenue sur walltech !</h5>
                 </div>
+                <img src="eleve.jpg" />
+                <meta http-equiv="refresh" content="2;URL=filactualites.php">
 
-                <div class="cols-sm-10">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
-                        <input type="file" class="form-control" name="photo" id="username">
-                    </div>
-                </div>
-
-                </br>
-
-                <div class="mt-5 mb-5 text-center text-white">
-                    <h5>Sélectionnez votre classe :</h5>
-                </div>
-                
-                    <select class="form-control d-flex flex-nowrap" name="role">
-                        <optgroup label="Élève">
-                            <option value="sem1">Semestre 1</option>
-                            <option value="sem2">Semestre 2</option>
-                            <option value="sem3">Semestre 3</option>
-                        </optgroup>
-                        <optgroup label="Professeur">
-                            <option value="profs1">Professeur S1</option>
-                            <option value="profs2">Professeur S2</option>
-                            <option value="profs3">Professeur S3</option>
-                        </optgroup>
-                    </select>
-
-                    </br>
-
-                    <button type="submit" name="perfect" class="btn btn-secondary">Confirmer</button>
-                </form>
             </div>
         </div>
     </body>
