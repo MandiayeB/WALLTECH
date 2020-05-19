@@ -3,7 +3,19 @@
     include( 'BDD.php' );
     require ( 'fonctions.php' );
 
-    if ( isset( $_POST['publier'] ) ) {
+    if ( !empty($_POST['pollcontent'])) {
+
+        if ( !empty( $_FILES['img']['name'] ) ) {
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
+
+        } else {
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], false, false, false);
+
+        }
+
+    } else if ( isset( $_POST['publier'] ) ) {
                         
         if ( !empty( $_FILES['img']['name'] ) ) {
             
@@ -91,6 +103,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link bg-dark text-white" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link bg-dark text-white" id="poll-tab" data-toggle="tab" href="#poll" role="tab" aria-controls="poll" aria-selected="false">Sondage</a>
+                                </li>
                             </ul>
                         </div>
                     <form method = 'POST' enctype="multipart/form-data">
@@ -101,8 +116,8 @@
                                         <label class="sr-only" for="message">post</label>
                                         <textarea class="form-control" name='post' id="message" rows="3" placeholder="Quoi de neuf ?"></textarea>
                                     </div>
-    
                                 </div>
+
                                 <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                                     <div class="form-group">
                                         <div class="custom-file">
@@ -112,7 +127,20 @@
                                     </div>
                                     <div class="py-4"></div>
                                 </div>
+
+                                <div class="tab-pane fade" id="poll" role="tabpanel" aria-labelledby="poll-tab">
+                                    <div class="form-group">
+                                        <div class="container">
+                                            <input type="text" class="form-control" name="pollcontent" id="poll" rows="3" placeholder="Sondage"><p>
+                                            <div class="list-group">
+                                                <input type="text" class="form-control" name="poll1" id="poll" rows="3" placeholder="Choix n°1">
+                                                <input type="text" class="form-control" name="poll2" id="poll" rows="3" placeholder="Choix n°2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                             <div class="btn-toolbar justify-content-between">
                                 <div class="btn-group">
                                     <input type="submit" name='publier' class="btn btn-light" value='Publier'>
