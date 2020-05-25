@@ -1,7 +1,19 @@
 <?php
     session_start();
     include( 'BDD.php' );
-    require ( 'fonctions.php' );
+	require ( 'fonctions.php' );
+	
+	if ( isset ( $_POST['update'] ) ){
+
+		modifiermdp ( $_SESSION['email'], $_POST['password'], $_POST['confirm'], $_POST['iconfirm'], $db );
+
+		if ( !empty ( $_FILES['photo']['name'] ) ) {
+
+			modifierphoto ( $db, $_FILES['photo']['name'], $_FILES['photo']['tmp_name'], $_SESSION['idut'] );
+
+		}
+
+	}
 
 ?>
 <!DOCTYPE html>
@@ -36,9 +48,8 @@
 	               		<hr/>
 	               	</div>
 	            </div> 
-				
-				<div class="main-login main-center">
-					<form method ="POST">
+				<form method ="POST" enctype="multipart/form-data">
+					<div class="main-login main-center">
 						<div class="form-group">
 							<label for="username" class="cols-sm-2 control-label">Photo</label>
 							<div class="cols-sm-10">
@@ -48,9 +59,7 @@
 								</div>
 							</div>
 						</div>
-					</form>
-					
-					<form method ="GET">
+
 						<div class="form-group">
 							<label for="password" class="cols-sm-2 control-label"> Ton mot de passe actuelle </label>
 							<div class="cols-sm-10">
@@ -85,17 +94,12 @@
 							<button type="submit" name="update" class="btn btn-primary btn-lg btn-block login-button">Confirmer</button>
 							
 						</div>
-					</form>
+				</form>
 					<form action="filactualites.php">
 					<input type ="submit" name ="retour" value ="Retour accueil"> 
 					</form>
 				</div>
 			</div>
-		</div>	
-	<?php
-		if ( isset ( $_GET['update'] ) ){
-			modifier ( $_SESSION['email'], $_GET['password'], $_GET['confirm'], $_GET['iconfirm'], $db );
-		}
-	?>	
+		</div>
 	</body>
 </html>

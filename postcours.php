@@ -3,58 +3,20 @@
     include( 'BDD.php' );
     require ( 'fonctions.php' );
 
-    if ( !empty($_POST['pollcontent'])) {
-
-        if ( !empty( $_FILES['img']['name'] ) ) {
-
-            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
-
-        } else {
-
-            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], false, false, false);
-
-        }
-
-    } else if ( isset( $_POST['publier'] ) ) {
+    if ( isset( $_POST['leçon'] ) ) {
                         
         if ( !empty( $_FILES['img']['name'] ) ) {
             
-            postfile( $_POST['post'], $_SESSION['idut'], $db, $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
+            publiercours( $_POST['post'], $_SESSION['idut'], $_POST['classe'], $db, $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
 
         } else {
 
-            postfile( $_POST['post'], $_SESSION['idut'], $db, false, false, false);
+            publiercours( $_POST['post'], $_SESSION['idut'], $_POST['classe'], $db, false, false, false);
         
         }
     
     }
 
-    if( isset( $_POST['pubcom'] ) ) {
-
-        commenter( $_POST['comment'], $_SESSION['idut'], $db, $_POST['idFil'] );
-    
-    }
-
-    if( isset( $_POST['like'] ) ) {
-
-        likepost( $db, $_POST['idFil'], $_SESSION['idut'] );
-    
-    }
-
-    if ( isset($_POST['ch1'])) {
-
-        voteSondage( $db, $_POST['idFil'], $_SESSION['idut'], 1);
-        
-    } else if ( isset($_POST['ch2'])) {
-
-        voteSondage( $db, $_POST['idFil'], $_SESSION['idut'], 2);
-    }
-
-    if( isset( $_POST['sup'] ) ) {
-
-        supprimerfila( $_POST['sup'], $db );
-        
-    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,35 +43,32 @@
         <div class="container-fluid gedf-wrapper">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card bg-dark">
+                    <div class="card">
                         <div class="card-body bg-dark text-white">
 
                             <?php
                             echo '<img class="rounded-circle" width="45" height="45" 
                             src="'.photodeprofil( $db, $_SESSION['idut']).'" alt="">';
                             ?>
-
-                            <div>&nbsp</div>
-                            <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
                             
+                            <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
+
                             <?php 
                                 afficherrole ( verifrole ( $db, $_SESSION['idut'] ) ); 
                             ?>
                             
                             <div class="h7">Description du profil</div>
                         </div>
-                        <span class="border border-secondary"></span>
-                        <ul class="list-group list-group-flush">
+                        <!--<ul class="list-group list-group-flush">
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Followers</div>
                                 <div class="h5">0</div>
                             </li>
-                            <span class="border border-secondary"></span>
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Following</div>
                                 <div class="h5">0</div>
                             </li>
-                        </ul>
+                        </ul>-->
                     </div>
                 </div>
 
@@ -125,9 +84,6 @@
                                 <li class="nav-item">
                                     <a class="nav-link bg-dark text-white" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link bg-dark text-white" id="poll-tab" data-toggle="tab" href="#poll" role="tab" aria-controls="poll" aria-selected="false">Sondage</a>
-                                </li>
                             </ul>
                         </div>
                     <form method = 'POST' enctype="multipart/form-data">
@@ -135,10 +91,16 @@
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                                     <div class="form-group">
+                                            
+                                        <?php choixclasse( $db, $_SESSION['idut'] ); ?>
+
+                                        <div>&nbsp</div>
+
                                         <label class="sr-only" for="message">post</label>
-                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="Quoi de neuf ?"></textarea>
+                                        <textarea class="form-control" name='post' id="message" rows="3" placeholder="Choisissez une classe, puis ajoutez votre cours."></textarea>
                                     </div>
                                 </div>
+
 
                                 <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                                     <div class="form-group">
@@ -149,53 +111,24 @@
                                     </div>
                                     <div class="py-4"></div>
                                 </div>
-
-                                <div class="tab-pane fade" id="poll" role="tabpanel" aria-labelledby="poll-tab">
-                                    <div class="form-group">
-                                        <div class="container">
-                                            <input type="text" class="form-control" name="pollcontent" id="poll" rows="3" placeholder="Sondage"><p>
-                                            <div class="list-group">
-                                                <input type="text" class="form-control" name="poll1" id="poll" rows="3" placeholder="Choix n°1">
-                                                <input type="text" class="form-control" name="poll2" id="poll" rows="3" placeholder="Choix n°2">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="btn-toolbar justify-content-between">
                                 <div class="btn-group">
-                                    <input type="submit" name='publier' class="btn btn-light" value='Publier'>
+                                    <input type="submit" name='leçon' class="btn btn-light" value='Publier'>
                                 </div>
                             </div>
                         </div>
                     </div>
                     </form>
-
                     <?php 
-                        
-                    afficherfile( $db, $_SESSION['idut'] );
-                        
-                    ?>
-                    
-                </div>
-                
-                <!-- Exemple de carte -->
 
-                
-                <div class="col-md-3">
-                    <div class="card gedf-card bg-dark">
-                        <div class="card-body bg-dark text-white">
-                            <h5 class="card-title">Card title</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                                card's content.</p>
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        if ( isset( $_GET['success'] ) ) {
+                            echo '<div class="mt-5 mb-5 text-success">
+                                    <h5> Votre cours a été publié avec succès ! </h5>
+                                  </div>';
+                        }
+                    
+                    ?>
     </body>
 </html>
