@@ -9,7 +9,7 @@
 if ( isset( $_POST['inscription'] ) == TRUE ){
 
     inscription( $_POST['email'], $_POST['password'], $_POST['ipassword'], $_POST['prenom'],
-                 $_POST['nom'], $db, $_FILES['profilepicture']['name'], $_FILES['profilepicture']['tmp_name'] );
+                 $_POST['nom'], $db );
 }
 
 ?>
