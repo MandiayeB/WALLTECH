@@ -60,23 +60,19 @@
                 <div class="mesgs card-body bg-dark text-white">
                     <div class="msg_history">
 
-                                <?php 
-                                    affichermessages( $db, $_SESSION['idut'], $_GET['idUt'] );
-                                ?>
-
-                                    <div class="type_msg">
-                                        <div class="input_msg_write">
-                                            <?php echo 
-                                            '<form method="POST" action="chat.php?idUt='.$_GET['idUt'].'">'; ?>
-                                                <input type="text" class="write_msg text-white" name="message" placeholder="Type a message" />
-                                                <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="false"></i>&#x27A4;</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                        <?php 
+                            affichermessages( $db, $_SESSION['idut'], $_GET['idUt'] );
+                        ?>
+                        </div>
+                        <div class="type_msg">
+                            <div class="input_msg_write">
+                                <?php echo 
+                                '<form method="POST" action="chat.php?idUt='.$_GET['idUt'].'">'; ?>
+                                    <input type="text" class="write_msg text-white" name="message" placeholder="Type a message" />
+                                    <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i>&#x27A4;</button>
+                                </form>
                             </div>
-                        <!--</div>
-                    </div>-->
+                        </div>
                 </div>
             </div>
         </div>

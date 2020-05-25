@@ -33,23 +33,22 @@
                             <!--<i class="fa fa-envelope-o">
                                 <span class="badge badge-danger">11</span>  NOTIFICATION
                             </i>-->
-                            Menu déroulant
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">exemple 1</a>
-                                <a class="dropdown-item" href="#">exemple 2</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">exemple 3</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                            <!--<i class="fa fa-bell">
-                                <span class="badge badge-info">11</span>  NOTIFICATION
-                            </i>-->
                             Cours
                             </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <?php deroulecours( $db, $_SESSION['idut'] ); ?>
+                                
+                            </div>
                         </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="postcours.php">
+                            <i class="fa fa-bell">
+                                <span class="badge badge-info">11</span>  NOTIFICATION
+                            </i>
+                            Cours
+                            </a>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link" href="accueil.php">
                             <!--<i class="fa fa-bell">
