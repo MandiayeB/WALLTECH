@@ -942,6 +942,12 @@
 
     function supprimerfila ( $id, $db ){
 
+        $m = $db -> prepare( "DELETE FROM checksondage WHERE idFil = :id" );
+        $m-> execute( ['id' => $id] );
+
+        $y = $db -> prepare( "DELETE FROM sondage WHERE idFil = :id" );
+        $y-> execute( ['id' => $id] );
+
         $reponse = $db -> prepare( "DELETE FROM likefil WHERE idFil = :id" );
         $reponse-> execute( ['id' => $id] );
 
