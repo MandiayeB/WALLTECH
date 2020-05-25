@@ -41,6 +41,15 @@
     
     }
 
+    if ( isset($_POST['ch1'])) {
+
+        voteSondage( $db, $_POST['idFil'], $_SESSION['idut'], 1);
+        
+    } else if ( isset($_POST['ch2'])) {
+
+        voteSondage( $db, $_POST['idFil'], $_SESSION['idut'], 2);
+    }
+
     if( isset( $_POST['sup'] ) ) {
 
         supprimerfila( $_POST['sup'], $db );
@@ -72,17 +81,19 @@
         <div class="container-fluid gedf-wrapper">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card">
+                    <div class="card bg-dark">
                         <div class="card-body bg-dark text-white">
                             <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
                             <div class="h7 text-muted">Nom complet</div>
                             <div class="h7">Description du profil</div>
                         </div>
+                        <span class="border border-secondary"></span>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Followers</div>
                                 <div class="h5">0</div>
                             </li>
+                            <span class="border border-secondary"></span>
                             <li class="list-group-item bg-dark text-white">
                                 <div class="h6 text-muted">Following</div>
                                 <div class="h5">0</div>
@@ -200,7 +211,7 @@
 
                 </div>
                 <div class="col-md-3">
-                    <div class="card gedf-card">
+                    <div class="card gedf-card bg-dark">
                         <div class="card-body bg-dark text-white">
                             <h5 class="card-title">Card title</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>

@@ -179,6 +179,31 @@
     }
 
     ///////////////////////////////////////////////////////
+    ///////////// Fil d'actualité (VOTER SONDAGE) /////////////
+    /////////////////////////////////////////////////////
+
+    function voteSondage( $db, $idFil, $user, $choix ) {
+        
+        $req2 = $db->prepare('INSERT INTO checksondage (idFil, Utilisateur, choix) VALUES (:idFil, :Utilisateur, :choix)');
+        $req2->execute(array(
+            'idFil' => $idFil,
+            'Utilisateur' => $user,
+            'choix'=> $choix
+        ));
+        $req2->closeCursor();
+
+        $req1 = $db->prepare( 'UPDATE sondage SET nbvotes = nbvotes+1 WHERE idFil = :idFil');
+        $req1->execute(array(
+            'idFil' => $idFil
+
+        ));
+        $req1->closeCursor();
+
+        header("Location: publication.php");
+
+    }
+
+    ///////////////////////////////////////////////////////
     ///////////// Fil d'actualité (COMMENTER) ////////////
     /////////////////////////////////////////////////////
 
@@ -249,6 +274,22 @@
             ));
             $data5 = $req6->fetch();
             
+            //VOTE SONDAGE//
+
+            $req7 = $db->prepare('SELECT COUNT(*) FROM checksondage WHERE idFil = :fil AND Utilisateur = :user' );
+            $req7->execute(array(
+                'fil'=>$donnees['idFil'],
+                'user'=> $user
+            ));
+            $data6=$req7->fetch();
+
+            $req8 = $db->prepare('SELECT * FROM checksondage WHERE idFil = :fil AND Utilisateur = :user' );
+            $req8->execute(array(
+                'fil'=>$donnees['idFil'],
+                'user'=> $user
+            ));
+            $data7=$req8->fetch();
+            
             echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
@@ -278,7 +319,7 @@
                             
                     echo '</div>
                     </div>
-                    
+                    <span class="border border-secondary"></span>
                     <div class="card-body">';
 
             if( $donnees['img'] != 'non' ) {
@@ -287,14 +328,94 @@
 
             }
 
-                    echo     '<p class="card-text">'.$donnees['post'].'</p>';
+                    echo'<p class="card-text">'.$donnees['post'].'</p>';
 
             if ($donnees['sondage'] == 1 ) {
 
-                echo '<p class="card-text">Choix 1 : '.$data4['pollcontent'].'</p>
-                        <p class="card-text">Choix 2 : '.$data5['pollcontent'].'</p>';
+                if($data6['COUNT(*)'] > 0) {
+
+                    echo '<div class="card-block">
+                        <ul class="list-group bg-dark">
+                            <li class="list-group-item bg-dark">
+                                <div class="radio bg-dark">
+                                    <label>
+                                    <span name="ch1" class="btn btn-transparent">';
+
+                    if ($data7['choix'] == 1) {
+
+                                echo '<img src="btnpollactive.png" width="20px" height="20px">';
+
+                    } else {
+
+                                echo '<img src="btnpoll.png" width="20px" height="20px">';
+
+                    }
+
+                                echo'</span>
+                                    </label>
+                                    '.$data4['pollcontent'].'
+                                </div>
+                                <div>
+                                
+                            </li>
+                            <li class="list-group-item bg-dark">
+                                <div class="radio bg-dark">
+                                    <label>
+                                    <span name="ch2" class="btn btn-transparent">';
+                    
+                    if ($data7['choix'] == 2) {
+
+                                echo '<img src="btnpollactive.png" width="20px" height="20px">';
+
+                    } else {
+
+                                 echo '<img src="btnpoll.png" width="20px" height="20px">';
+
+                    }
+
+                                echo'</span>
+                                    </label>
+                                    '.$data5['pollcontent'].'
+                                </div>
+                            </li>
+                        </ul>
+                    </div>';
+
+                } else {
+
+                    echo '<div class="card-block">
+                            <ul class="list-group bg-dark">
+                                <form method="POST">
+                                    <li class="list-group-item bg-dark">
+                                        <div class="radio bg-dark">
+                                            <label>
+                                            <button type="submit" name="ch1" class="btn btn-transparent">
+                                                <img src="btnpoll.png" width="20px" height="20px">
+                                            </button>
+                                            </label>
+                                            '.$data4['pollcontent'].'
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item bg-dark">
+                                        <div class="radio bg-dark">
+                                            <label>
+                                            <button type="submit" name="ch2" class="btn btn-transparent">
+                                                <img src="btnpoll.png" width="20px" height="20px">
+                                            </button>
+                                            </label>
+                                            '.$data5['pollcontent'].'
+                                        </div>
+                                    </li>
+                                    <input type="hidden" value ="'.$donnees['idFil'].'" name="idFil">
+                                </form>
+                            </ul>
+                        </div>';
+
+                }
+                
             }        
                     echo '</div>
+                    <span class="border border-secondary"></span>
                     <form method = "POST">
                         <div class="card-footer d-flex flex-row-reverse">
                             
@@ -353,12 +474,12 @@
                                         <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees2['heureCom'].'</div>
                                     </div>
                                 </div>';
-                                if ($user == $donnees2['Utilisateur']) {
-                                
-                                    echo'<div class ="col col-lg-2"> 
-                                            <img src = "1077012.png"  width="30px" height="30px class="btn btn-light" style = "background-color: transparent; border: none;">
-                                        </div>';
-                                    }
+                    if ($user == $donnees2['Utilisateur']) {
+                    
+                        echo'<div class ="col col-lg-2"> 
+                                <img src = "1077012.png"  width="30px" height="30px class="btn btn-light" style = "background-color: transparent; border: none;">
+                            </div>';
+                        }
                         echo '</div>
                             <div class="card-body">
                                 <p class="komen">'.$donnees2['com'].'</p>
