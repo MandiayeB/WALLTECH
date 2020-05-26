@@ -50,7 +50,7 @@
                             </a>
                         </li> -->
                         <li class="nav-item">
-                            <a class="nav-link" href="accueil.php">
+                            <a class="nav-link" href="deconnexion.php">
                             <!--<i class="fa fa-bell">
                                 <span class="badge badge-info">11</span>  NOTIFICATION
                             </i>-->

@@ -3,6 +3,12 @@
     include( 'BDD.php' );
     require ( 'fonctions.php' );
 
+    if (isset($_SESSION['email'])==FALSE){
+
+        header('Location:accueil.php');
+
+    }
+
     if ( !empty($_POST['pollcontent'])) {
 
         if ( !empty( $_FILES['img']['name'] ) ) {

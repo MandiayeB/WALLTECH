@@ -3,6 +3,12 @@
     include( 'BDD.php' );
     require ( 'fonctions.php' );
 
+    if (isset($_SESSION['email'])==FALSE){
+
+        header('Location:accueil.php');
+        
+    }
+    
     if ( isset( $_POST['leçon'] ) ) {
                         
         if ( !empty( $_FILES['img']['name'] ) ) {

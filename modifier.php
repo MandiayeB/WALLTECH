@@ -14,6 +14,12 @@
 		}
 
 	}
+	
+	if (isset($_SESSION['email'])==FALSE){
+
+        header('Location:accueil.php');
+        
+    }
 
 ?>
 <!DOCTYPE html>

@@ -1408,7 +1408,7 @@
 
             $name_file = $filename;
             $tmp_name = $tmpname;
-            $local_image = "C:/wamp64/www/Walltech/images/";
+            $local_image = "C:/wampp/htdocs/Walltech/images/";
             $chemin = "images/".$name_file;
             move_uploaded_file ( $tmp_name , $local_image.$name_file);
 
