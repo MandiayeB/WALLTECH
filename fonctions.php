@@ -301,7 +301,7 @@
     ///////////// Fil d'actualité (PUBLIER) //////////////
     /////////////////////////////////////////////////////
     
-    function postfile ( $texte, $user, $db, $filename, $tmpname, $test ) {
+    function postfile ( $texte, $user, $db, $filename, $tmpname, $test, $test2, $video ) {
 
         if ( $test ) {
 
@@ -316,15 +316,31 @@
             $chemin = 'non';
 
         }
+        if ( $test2 ) {
 
-        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img ) VALUES ( :post, :utilisateur, :img )' );
-        $req->execute(array(
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
-            'img' => $chemin
+            'img' => $chemin,
+            'video'=>$video
         ));
         $req->closeCursor();
         header( "Location: publication.php" );
+          
+        } else {
+
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req->execute(array(
+            'post' => $texte,
+            'utilisateur' => $user,
+            'img' => $chemin,
+            'video'=>0
+        ));
+        $req->closeCursor();
+        header( "Location: publication.php" );
+
+        }
 
     }
 
@@ -332,7 +348,7 @@
     ///////////// Fil d'actualité (PUBLIER SONDAGE) //////
     /////////////////////////////////////////////////////
 
-    function postSondage ($poll1, $poll2, $db, $texte, $user, $filename, $tmpname, $test) {
+    function postSondage ($poll1, $poll2, $db, $texte, $user, $filename, $tmpname, $test, $test2, $video) {
 
         if ( $test ) {
 
@@ -346,18 +362,36 @@
 
             $chemin = 'non';
 
-        }
+        } 
 
         /////////////////// Création du post ///////////////////////
 
-        $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, sondage, img ) VALUES ( :post, :utilisateur, :sondage, :img )' );
-        $req->execute(array(
+        if ( $test2 ) {
+
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
-            'sondage' => 1,
-            'img' => $chemin
+            'img' => $chemin,
+            'video'=>$video
         ));
         $req->closeCursor();
+        header( "Location: publication.php" );
+          
+        } else {
+
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req->execute(array(
+            'post' => $texte,
+            'utilisateur' => $user,
+            'img' => $chemin,
+            'video'=>0
+        ));
+        $req->closeCursor();
+        header( "Location: publication.php" );
+
+        }
+
 
         //////////////// Récupération de l'ID du post //////////////
 
@@ -543,6 +577,11 @@
             if( $donnees['img'] != 'non' ) {
 
                 echo '<img width="200" height="175" src="'.$donnees['img'].'" alt="">';
+
+            }
+            if ( $donnees['video'] != '0'){
+
+                echo '<iframe width ="560" height ="315" class="col" src ="https://www.youtube.com/embed/'.$donnees['video'].'" frameborder ="0" allowfullscreen></iframe>';
 
             }
 
@@ -1534,4 +1573,31 @@
         $q-> execute( ['id' => $id] );
 
     }
+    ////////////////////////////////////////////////////
+    /////////////////// CUT VIDEO /////////////////////
+    //////////////////////////////////////////////////
+    
+    function cutvideo($video){
+
+        for($i=0; $i<strlen($video); $i++){
+
+            if ($video[$i] == "="){  //Si la chaine de caractere a l'indice i est egal a "="
+                $url = substr($video, $i+1); //Coupe la chaine de charactere a partir du "="
+                break;
+            }
+            
+        }
+        $lien = $url;
+
+        for($i=0; $i<strlen($url) ;$i++){ 
+        
+            if($url[$i]=="&"){ //Si la chaine de caractere a l'indice i est egal a "="
+               $lien = substr($url,0,-(strlen($url)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
+               break;
+            }
+        
+        }
+        return $lien;
+    }
+    
 ?>

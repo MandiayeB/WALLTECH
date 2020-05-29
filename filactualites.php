@@ -8,32 +8,58 @@
         header('Location:accueil.php');
 
     }
+    if ( !empty($_POST['postvideo'])){
+
+        $urlvideo = cutvideo($_POST['postvideo']); //$urlvideo = $lien;
+
+    }
 
     if ( !empty($_POST['pollcontent'])) {
 
-        if ( !empty( $_FILES['img']['name'] ) ) {
+        if ( !empty( $_FILES['img']['name'] ) AND empty($_POST['postvideo'])) { // Si image est remplie et que video n'est pas remplie
 
-            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], $_FILES['img']['name'], $_FILES['img']['tmp_name'], true, false, false);
 
-        } else {
+        }else if(empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){ // Si image n'est pas remplie et que video est remplie
 
-            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], false, false, false);
+            postSondage( $_POST['post'], $_SESSION['idut'], $db, false, false ,false, true , $urlvideo);
+
+        } else if(!empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){  //Si image et video sont remplies
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], 
+            $_FILES['img']['name'], $_FILES['img']['tmp_name'], true, true, $urlvideo);
+        
+        }else { // Si rien n'est remplie
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], false, false, false, false, false);
 
         }
 
     } else if ( isset( $_POST['publier'] ) ) {
                         
-        if ( !empty( $_FILES['img']['name'] ) ) {
+        if ( !empty( $_FILES['img']['name'] )AND empty($_POST['postvideo']) ) { // si image est remplie et que video n'est pas remplie
             
-            postfile( $_POST['post'], $_SESSION['idut'], $db, $_FILES['img']['name'], $_FILES['img']['tmp_name'], true);
+            postfile( $_POST['post'], $_SESSION['idut'], $db, $_FILES['img']['name'], $_FILES['img']['tmp_name'], true,false,false);
 
-        } else {
+        }
 
-            postfile( $_POST['post'], $_SESSION['idut'], $db, false, false, false);
+        else if(empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){ // si image n'est pas remplie et que video est remplie
+
+            postfile( $_POST['post'], $_SESSION['idut'], $db, false, false ,false, true , $urlvideo);
+
+        }else if(!empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){  //Si image et video sont remplies
+
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], 
+            $_FILES['img']['name'], $_FILES['img']['tmp_name'], true, true,$urlvideo);
+        
+        
+        }else { //Si rien n'est remplie
+
+            postfile( $_POST['post'], $_SESSION['idut'], $db, false, false, false, false, false);
         
         }
     
-    }
+    } 
 
     if( isset( $_POST['pubcom'] ) ) {
 
@@ -61,6 +87,7 @@
         supprimerfila( $_POST['sup'], $db );
         
     }
+    
 ?>
 <!DOCTYPE html>
 <html>
@@ -134,6 +161,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link bg-dark text-white" id="poll-tab" data-toggle="tab" href="#poll" role="tab" aria-controls="poll" aria-selected="false">Sondage</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link bg-dark text-white" id="video-tab" data-toggle="tab" href="#postvideo" role="tab" aria-controls="video" aria-selected="false">Video</a>
+                                </li>
                             </ul>
                         </div>
                     <form method = 'POST' enctype="multipart/form-data">
@@ -167,6 +197,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="tab-pane fade " id="postvideo" role="tabpanel" aria-labelledby="video-tab">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="video">video</label>
+                                        <textarea class="form-control" name='postvideo' id="video" rows="3" placeholder="Votre lien Youtube : http//youtube.com/"></textarea>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="btn-toolbar justify-content-between">
@@ -181,7 +218,7 @@
                     <?php 
                         
                     afficherfile( $db, $_SESSION['idut'] );
-                        
+
                     ?>
                     
                 </div>
