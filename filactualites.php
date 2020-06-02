@@ -50,13 +50,8 @@
 
         }else if(!empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){  //Si image et video sont remplies
 
-<<<<<<< HEAD
-            postfile( $_POST['post'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], 
-            $_FILES['img']['name'], $_FILES['img']['tmp_name'], true, true,$urlvideo);
-=======
             postfile( $_POST['post'], $_SESSION['idut'], $db, $_FILES['img']['name'], 
             $_FILES['img']['tmp_name'], true, true, $urlvideo);
->>>>>>> 9f9434270c561b93182be292b21ac22b039ba139
         
         
         }else { //Si rien n'est remplie

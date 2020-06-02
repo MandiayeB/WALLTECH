@@ -368,43 +368,25 @@
 
         if ( $test2 ) {
 
-<<<<<<< HEAD
-            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video, sondage) VALUES ( :post, :utilisateur, :img, :video, :son)' );
-=======
             $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, sondage, video ) VALUES ( :post, :utilisateur, :img, :son, :video)' );
->>>>>>> 9f9434270c561b93182be292b21ac22b039ba139
             $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
             'img' => $chemin,
-<<<<<<< HEAD
-            'video'=>$video,
-            'son' => 1
-=======
             'son' => 1,
             'video'=>$video
->>>>>>> 9f9434270c561b93182be292b21ac22b039ba139
         ));
         $req->closeCursor();
           
         } else {
 
-<<<<<<< HEAD
-            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video, sondage ) VALUES ( :post, :utilisateur, :img, :video, :son)' );
-=======
             $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, sondage, video ) VALUES ( :post, :utilisateur, :img, :son, :video)' );
->>>>>>> 9f9434270c561b93182be292b21ac22b039ba139
             $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
             'img' => $chemin,
-<<<<<<< HEAD
-            'video'=> 0,
-            'son' => 1
-=======
             'son' => 1,
             'video'=> 0
->>>>>>> 9f9434270c561b93182be292b21ac22b039ba139
         ));
         $req->closeCursor();
 
