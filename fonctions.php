@@ -1621,11 +1621,16 @@
             }
             
         }
+
+        if (isset($url)==FALSE){ // Si la personne n'as pas envoyer l'intergralité de l'url 
+            $url = $video;
+        }
+
         $lien = $url;
 
         for($i=0; $i<strlen($url) ;$i++){ 
         
-            if($url[$i]=="&"){ //Si la chaine de caractere a l'indice i est egal a "="
+            if($url[$i]=="&"){ // Si la chaine de caractere a l'indice i est egal a "&"
                $lien = substr($url,0,-(strlen($url)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
                break;
             }
