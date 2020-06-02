@@ -9,6 +9,12 @@
         
     }
 
+    if( isset( $_POST['modification'] ) ) {
+
+        modifcours( $_POST['modification'], $_POST['change'], $db );
+        
+    }
+
     if (isset($_SESSION['email'])==FALSE){
 
         header('Location:accueil.php');
@@ -64,8 +70,49 @@
                 <div class="col-md-6 gedf-main">
 
                     <?php 
+                    if ( isset( $_GET['success'] ) ) {
+
+                        echo '<div class="mt-5 mb-5 text-success">
+                                <h5> Votre cours a été modifié avec succès ! </h5>
+                              </div>';
+
+                    } else if( isset( $_POST['modif'] ) ) {
+
+                        $req = $db -> prepare( 'SELECT * FROM cours WHERE idCours = :id' );
+                        $req -> execute(array(
+                            'id' => $_POST['modif']
+                        ));
+                        $donnees = $req->fetch();
+
+                        echo'<div class="card gedf-card bg-dark text-white">
+                                <div class="card-body">
+                                    <form method = "POST" enctype="multipart/form-data">
+                                            <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                                                <div class="form-group">
+                                                    <div>&nbsp</div>
+                                                    <label class="sr-only" for="message">post</label>
+                                                    <textarea class="form-control" name="change" id="message" rows="3">'.$donnees['cours'].'</textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="btn-toolbar justify-content-between">
+                                            <div class="btn-group">
+                                                <input type="hidden" name="modification" value="'.$donnees['idCours'].'">
+                                                <input type="submit" name="send" class="btn btn-light" value="Modifier">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>';
                         
-                    affichercours( $db, $_SESSION['idut'], $_GET['classe'] );
+                    } else {
+
+                        affichercours( $db, $_SESSION['idut'], $_GET['classe'] );
+
+                    }
                         
                     ?>
                     

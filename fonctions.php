@@ -1534,10 +1534,16 @@
                                 if ( $user == $donnees['idUtilisateur2'] ) {
                                     
                                     echo'<form method="POST">
-                                            <div class ="col col-lg-2">
+                                            <div class ="col">
+                                            
+                                                <button type = "submit" name = "modif" value ="'.$donnees['idCours'].'" class="btn btn-light" style = "background-color: transparent; border: none;">
+                                                    <img src = "engrenage.png"  width="25px" height="25px">
+                                                </button>
+
                                                 <button type = "submit" name = "sup" value ="'.$donnees['idCours'].'" class="btn btn-light" style = "background-color: transparent; border: none;">
                                                     <img src = "button.png"  width="25px" height="25px">
                                                 </button>
+                                                
                                             </div>
                                         </form>';
 
@@ -1573,6 +1579,24 @@
     }
 
     ///////////////////////////////////////////////////////
+    /////////////////  Modifier un cours  ////////////////
+    /////////////////////////////////////////////////////
+
+    function modifcours ( $id, $cours, $db ) {
+
+        $req = $db -> prepare( "UPDATE cours SET cours = :cours WHERE idCours = :id" );
+        $req-> execute( [
+
+            'cours' => $cours,
+            'id' => $id
+
+        ] );
+
+        header( "Location: voircours.php?success=on" );
+
+    }
+
+    ///////////////////////////////////////////////////////
     ////////////////  Supprimer un cours  ////////////////
     /////////////////////////////////////////////////////
 
@@ -1582,6 +1606,7 @@
         $q-> execute( ['id' => $id] );
 
     }
+
     ////////////////////////////////////////////////////
     /////////////////// CUT VIDEO /////////////////////
     //////////////////////////////////////////////////
