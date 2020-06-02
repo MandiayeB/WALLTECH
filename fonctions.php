@@ -368,79 +368,86 @@
 
         if ( $test2 ) {
 
-            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, sondage, video ) VALUES ( :post, :utilisateur, :img, :son, :video)' );
             $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
             'img' => $chemin,
+            'son' => 1,
             'video'=>$video
         ));
         $req->closeCursor();
-        header( "Location: publication.php" );
           
         } else {
 
-            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, sondage, video ) VALUES ( :post, :utilisateur, :img, :son, :video)' );
             $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
             'img' => $chemin,
-            'video'=>0
+            'son' => 1,
+            'video'=> 0
         ));
         $req->closeCursor();
-        header( "Location: publication.php" );
 
         }
 
 
         //////////////// Récupération de l'ID du post //////////////
 
-        $req0=$db->prepare( 'SELECT * FROM filactu WHERE post = :texte AND Utilisateur = :user AND sondage = :son' );
+        $req0 = $db->prepare( 'SELECT * FROM filactu WHERE post = :texte AND Utilisateur = :user AND sondage = :son ORDER BY idFil DESC' );
         $req0->execute(array(
             'texte' => $texte,
             'user' => $user,
             'son' => 1
         ));
-        $data=$req0->fetch();
 
-        //////////// Création des deux choix du sondage ////////////
+        while ( $data = $req0 -> fetch() ) {
 
-        $req1 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
-        $req1->execute(array(
-            'idFil' => $data['idFil'],
-            'choix' => 1,
-            'pollcontent' => $poll1
-        ));
-        $req1->closeCursor();
+            //////////// Création des deux choix du sondage ////////////
 
-        $req2 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
-        $req2 ->execute(array(
-            'idFil' => $data['idFil'],
-            'choix' => 2,
-            'pollcontent' => $poll2
-        ));
-        $req2 ->closeCursor();
+            $req1 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
+            $req1->execute(array(
+                'idFil' => $data['idFil'],
+                'choix' => 1,
+                'pollcontent' => $poll1
+            ));
+            $req1->closeCursor();
+
+            $req2 = $db->prepare( 'INSERT INTO sondage ( idFil, choix, pollcontent ) VALUES ( :idFil, :choix, :pollcontent)');
+            $req2 ->execute(array(
+                'idFil' => $data['idFil'],
+                'choix' => 2,
+                'pollcontent' => $poll2
+            ));
+            $req2 ->closeCursor();
+
+            break;
+        }
 
         header( "Location: publication.php" );    
     }
 
     ///////////////////////////////////////////////////////
-    ///////////// Fil d'actualité (VOTER SONDAGE) /////////////
+    /////////// Fil d'actualité (VOTER SONDAGE) //////////
     /////////////////////////////////////////////////////
 
     function voteSondage( $db, $idFil, $user, $choix ) {
         
         $req2 = $db->prepare('INSERT INTO checksondage (idFil, Utilisateur, choix) VALUES (:idFil, :Utilisateur, :choix)');
         $req2->execute(array(
+
             'idFil' => $idFil,
             'Utilisateur' => $user,
             'choix'=> $choix
         ));
         $req2->closeCursor();
 
-        $req1 = $db->prepare( 'UPDATE sondage SET nbvotes = nbvotes+1 WHERE idFil = :idFil');
+        $req1 = $db->prepare( 'UPDATE sondage SET nbvotes = nbvotes+1 WHERE idFil = :idFil AND choix = :choix');
         $req1->execute(array(
-            'idFil' => $idFil
+
+            'idFil' => $idFil,
+            'choix' => $choix
 
         ));
         $req1->closeCursor();
@@ -576,20 +583,22 @@
 
             if( $donnees['img'] != 'non' ) {
 
-                echo '<img width="200" height="175" src="'.$donnees['img'].'" alt="">';
+                echo '<img width="30%" height="30%" src="'.$donnees['img'].'" alt="">';
+                echo '<br /><br />';
 
             }
             if ( $donnees['video'] != '0'){
 
                 echo '<iframe width ="560" height ="315" class="col" src ="https://www.youtube.com/embed/'.$donnees['video'].'" frameborder ="0" allowfullscreen></iframe>';
+                echo '<br /><br />';
 
             }
 
             echo     '<p class="card-text">'.$donnees['post'].'</p>';
 
             if ( $donnees['sondage'] == 1 ) {
-
-                if($data6['COUNT(*)'] > 0) {
+                
+                if ( $data6['COUNT(*)'] > 0 ) {
 
                     echo '<div class="card-block">
                         <ul class="list-group bg-dark">
@@ -610,7 +619,7 @@
 
                                 echo'</span>
                                     </label>
-                                    '.$data4['pollcontent'].'
+                                    '.$data4['pollcontent'].'&nbsp'.round(($data4['nbvotes']/($data4['nbvotes']+$data5['nbvotes'])*100), 0).'%
                                 </div>
                                 <div>
                                 
@@ -632,7 +641,7 @@
 
                                 echo'</span>
                                     </label>
-                                    '.$data5['pollcontent'].'
+                                    '.$data5['pollcontent'].'&nbsp'.round(($data5['nbvotes']/($data4['nbvotes']+$data5['nbvotes'])*100), 0).'%
                                 </div>
                             </li>
                         </ul>
