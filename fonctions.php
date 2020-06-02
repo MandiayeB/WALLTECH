@@ -368,27 +368,28 @@
 
         if ( $test2 ) {
 
-            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video, sondage) VALUES ( :post, :utilisateur, :img, :video, :son)' );
             $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
             'img' => $chemin,
-            'video'=>$video
+            'video'=>$video,
+            'son' => 1
         ));
         $req->closeCursor();
         header( "Location: publication.php" );
           
         } else {
 
-            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video ) VALUES ( :post, :utilisateur, :img, :video)' );
+            $req = $db->prepare( 'INSERT INTO filactu ( post, Utilisateur, img, video, sondage ) VALUES ( :post, :utilisateur, :img, :video, :son)' );
             $req->execute(array(
             'post' => $texte,
             'utilisateur' => $user,
             'img' => $chemin,
-            'video'=>0
+            'video'=> 0,
+            'son' => 1
         ));
         $req->closeCursor();
-        header( "Location: publication.php" );
 
         }
 
@@ -1587,11 +1588,16 @@
             }
             
         }
+
+        if (isset($url)==FALSE){ // Si la personne n'as pas envoyer l'intergralité de l'url 
+            $url = $video;
+        }
+
         $lien = $url;
 
         for($i=0; $i<strlen($url) ;$i++){ 
         
-            if($url[$i]=="&"){ //Si la chaine de caractere a l'indice i est egal a "="
+            if($url[$i]=="&"){ // Si la chaine de caractere a l'indice i est egal a "&"
                $lien = substr($url,0,-(strlen($url)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
                break;
             }

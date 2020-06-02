@@ -22,7 +22,7 @@
 
         }else if(empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){ // Si image n'est pas remplie et que video est remplie
 
-            postSondage( $_POST['post'], $_SESSION['idut'], $db, false, false ,false, true , $urlvideo);
+            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], false, false ,false, true , $urlvideo);
 
         } else if(!empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){  //Si image et video sont remplies
 
@@ -49,7 +49,7 @@
 
         }else if(!empty( $_FILES['img']['name'] )AND !empty($_POST['postvideo'])){  //Si image et video sont remplies
 
-            postSondage( $_POST['poll1'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], 
+            postfile( $_POST['post'], $_POST['poll2'], $db, $_POST['pollcontent'], $_SESSION['idut'], 
             $_FILES['img']['name'], $_FILES['img']['tmp_name'], true, true,$urlvideo);
         
         
