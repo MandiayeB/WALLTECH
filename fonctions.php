@@ -1588,29 +1588,78 @@
     
     function cutvideo($video){
 
-        for($i=0; $i<strlen($video); $i++){
+        if(stristr($video, '?list')!== FALSE){
 
-            if ($video[$i] == "="){  //Si la chaine de caractere a l'indice i est egal a "="
-                $url = substr($video, $i+1); //Coupe la chaine de charactere a partir du "="
-                break;
+            for($i=0; $i<strlen($video); $i++){
+                if($video[$i]=="/"){
+                    $list = substr($video,$i+1);
+                }
+                
             }
+            for($i=0;$i<strlen($list); $i++){
+                if(isset($list)){
+                    if($list[$i]=="?"){
+                        $list = substr($list,0,-(strlen($list)-$i));
+                    }
+                    $lien = $list;
+                    break;
+                }
+            }
+        }
+
+        if (isset($lien)==FALSE){
+            for($i=0; $i<strlen($video) ;$i++){ 
             
-        }
+                if($video[$i]=="&"){ // Si la chaine de caractere a l'indice i est egal a "&"
+                $url = substr($video,0,-(strlen($video)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
+                break;
+                }
 
-        if (isset($url)==FALSE){ // Si la personne n'as pas envoyer l'intergralité de l'url 
-            $url = $video;
-        }
-
-        $lien = $url;
-
-        for($i=0; $i<strlen($url) ;$i++){ 
-        
-            if($url[$i]=="&"){ // Si la chaine de caractere a l'indice i est egal a "&"
-               $lien = substr($url,0,-(strlen($url)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
-               break;
             }
-        
         }
+        if (isset($url)){  
+            for($i=0; $i<strlen($url); $i++){
+
+                if ($url[$i] == "="){  //Si la chaine de caractere a l'indice i est egal a "="
+                    $lien = substr($url, $i+1); //Coupe la chaine de charactere a partir du "="
+                   
+                }
+                
+            }
+        }
+
+        if(isset($lien)==FALSE) {
+
+            $lien = $video;
+            for ($i=0; $i<strlen($video); $i++ ){
+
+                if ($video[$i]=="/"){ // Si la chaine de caractere a l'indice i est egal a "?"
+                    $url1 = substr($video,$i+1); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
+                    $lien=$url1;
+                }      
+                
+            }
+            if (isset($url1)){
+                for ($i=0; $i<strlen($url1); $i++ ){
+                    if ($url1[$i]=="?"){ // Si la chaine de caractere a l'indice i est egal a "?"
+                            $lien = substr($url1,0,-(strlen($url1)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )
+                            $compare = $lien;
+                            break;
+                    }
+                }
+            }
+            if ($compare == "watch"){
+                for($i=0; $i<strlen($video); $i++){
+
+                    if ($video[$i] == "="){  //Si la chaine de caractere a l'indice i est egal a "="
+                        $lien = substr($video, $i+1); //Coupe la chaine de charactere a partir du "="
+                        break;
+                    }
+                
+                }
+            }
+        }
+        
         return $lien;
     }
     
