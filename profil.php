@@ -28,7 +28,7 @@
         <div class="row">
             <div class=" user-left-part bg-dark col card gedf-card">
             <div class="text-align: right">
-                    <a href="modifier.php" class="btn btn-primary btn-block">Modifier Profil</a>
+                 
                         </div>
                 <div class=" col-4 align-self offset-md-0">
                     <div class="row ">
@@ -52,7 +52,7 @@
     </br></br></br>
     <?php 
         
-            afficherfile( $db, $_SESSION['idut'] );                        
+            afficherprofil( $db, $_SESSION['idut'], );                        
         
     ?>
 </body>

@@ -2192,4 +2192,292 @@
         echo '<div class="h5 text-white row col">Nombre de coups : <div class="text-danger">&nbsp'.$data['nbcoups'].'</div></div>';
         echo '<div>&nbsp</div>';
     }
+    //////////////////////////////////////////////////
+    //////////////// Profil /////////////////////////
+    ////////////////////////////////////////////////
+
+    function afficherprofil ( $db, $user ) {
+        
+        $req = $db->prepare( 'SELECT * FROM filactu  INNER JOIN utilisateur ON 
+                filactu.Utilisateur = utilisateur.idUtilisateur WHERE Utilisateur = :ut ORDER BY heurepost DESC ' );
+        $req -> execute(['ut' => $user]);
+        
+        while ( $donnees = $req->fetch() ) {       /////////////////////Fil d'actualité (AFFICHER PUBLICATION)///////////////////////
+            
+            $reponse=$db->prepare( 'SELECT * FROM commentaires INNER JOIN utilisateur ON 
+                    commentaires.Utilisateur = utilisateur.idUtilisateur WHERE filactu = :filactu ORDER BY heureCom' );
+            $reponse->execute(array(
+                'filactu' => $donnees['idFil']
+            ));
+
+            $req2 = $db->prepare( 'SELECT COUNT(*) FROM commentaires WHERE filactu = :filactu' ); ////// Nombre de commentaires /////
+            $req2->execute(array(
+                'filactu' => $donnees['idFil']
+            ));
+            $data = $req2->fetch();
+
+            $req3 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil' ); ////////// Nombre de like //////////
+            $req3->execute(array(
+                'fil' => $donnees['idFil']
+            ));
+            $data2 = $req3->fetch();
+
+            $req4 = $db->prepare( 'SELECT COUNT(*) FROM likefil WHERE idFil = :fil AND Utilisateur = :user' ); /*Vérif like de l'utilisateur*/  
+            $req4->execute(array(
+                'fil' => $donnees['idFil'],
+                'user' => $user
+            ));
+            $data3 = $req4->fetch();
+
+            //////////////REPONSE DES SONDAGES/////////////
+
+            $req5 = $db->prepare( 'SELECT * FROM sondage WHERE idFil = :idFil AND choix = 1' ); ////// Choix 1 /////////
+            $req5->execute(array(
+                'idFil' => $donnees['idFil']
+
+            ));
+            $data4 = $req5->fetch();
+
+            $req6 = $db->prepare( 'SELECT * FROM sondage WHERE idFil = :idFil AND choix = 2' ); ////// Choix 2 /////////
+            $req6->execute(array(
+                'idFil' => $donnees['idFil']
+
+            ));
+            $data5 = $req6->fetch();
+            
+            //VOTE SONDAGE//
+
+            $req7 = $db->prepare('SELECT COUNT(*) FROM checksondage WHERE idFil = :fil AND Utilisateur = :user' );
+            $req7->execute(array(
+                'fil'=>$donnees['idFil'],
+                'user'=> $user
+            ));
+            $data6=$req7->fetch();
+
+            $req8 = $db->prepare('SELECT * FROM checksondage WHERE idFil = :fil AND Utilisateur = :user' );
+            $req8->execute(array(
+                'fil'=>$donnees['idFil'],
+                'user'=> $user
+            ));
+            $data7=$req8->fetch();
+            
+            echo '<div id="id'.$donnees['idFil'].'" class="card gedf-card bg-dark text-white">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-2">
+                                    <img class="rounded-circle" width="45" height="45" src="'.photodeprofil( $db, $donnees['idUtilisateur']).'" 
+                                        alt="">
+                                        
+                                </div>
+                                <div class="ml-2">
+                                    <div class="h4 m-0">'.$donnees['prenom'].' '.$donnees['nom'].'</div>';
+                                    
+                                    afficherrole ( verifrole ( $db, $donnees['idUtilisateur'] ) );
+
+                            echo   '<div class="t text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees['heurepost'].'</div>
+                                </div>
+                                
+                            </div>';
+
+                                if ( $user == $donnees['idUtilisateur'] ) {
+                                    
+                                    echo'<form method="POST">
+                                            <div class ="col col-lg-2">
+                                                <button type = "submit" name = "sup" value ="'.$donnees['idFil'].'" class="btn btn-light" style = "background-color: transparent; border: none;">
+                                                    <img src = "button.png"  width="25px" height="25px">
+                                                </button>
+                                            </div>
+                                        </form>';
+
+                                }
+                            
+                    echo '</div>
+                    </div>
+                    <div class="card-body">';
+
+            if( $donnees['img'] != 'non' ) {
+
+                echo '<img width="30%" height="30%" src="'.$donnees['img'].'" alt="">';
+                echo '<br /><br />';
+
+            }
+            if ( $donnees['video'] != '0'){
+
+                echo '<iframe width ="560" height ="315" class="col" src ="https://www.youtube.com/embed/'.$donnees['video'].'" frameborder ="0" allowfullscreen></iframe>';
+                echo '<br /><br />';
+
+            }
+
+            echo     '<p class="card-text">'.$donnees['post'].'</p>';
+
+            if ( $donnees['sondage'] == 1 ) {
+                
+                if ( $data6['COUNT(*)'] > 0 ) {
+
+                    echo '<div class="card-block">
+                        <ul class="list-group bg-dark">
+                            <li class="list-group-item bg-dark">
+                                <div class="radio bg-dark">
+                                    <label>
+                                    <span name="ch1" class="btn btn-transparent">';
+
+                    if ($data7['choix'] == 1) {
+
+                                echo '<img src="btnpollactive.png" width="20px" height="20px">';
+
+                    } else {
+
+                                echo '<img src="btnpoll.png" width="20px" height="20px">';
+
+                    }
+
+                                echo'</span>
+                                    </label>
+                                    '.$data4['pollcontent'].'&nbsp'.round(($data4['nbvotes']/($data4['nbvotes']+$data5['nbvotes'])*100), 0).'%
+                                </div>
+                                <div>
+                                
+                            </li>
+                            <li class="list-group-item bg-dark">
+                                <div class="radio bg-dark">
+                                    <label>
+                                    <span name="ch2" class="btn btn-transparent">';
+                    
+                    if ($data7['choix'] == 2) {
+
+                                echo '<img src="btnpollactive.png" width="20px" height="20px">';
+
+                    } else {
+
+                                 echo '<img src="btnpoll.png" width="20px" height="20px">';
+
+                    }
+
+                                echo'</span>
+                                    </label>
+                                    '.$data5['pollcontent'].'&nbsp'.round(($data5['nbvotes']/($data4['nbvotes']+$data5['nbvotes'])*100), 0).'%
+                                </div>
+                            </li>
+                        </ul>
+                    </div>';
+
+                } else {
+
+                    echo '<div class="card-block">
+                            <ul class="list-group bg-dark">
+                                <form method="POST">
+                                    <li class="list-group-item bg-dark">
+                                        <div class="radio bg-dark">
+                                            <label>
+                                            <button type="submit" name="ch1" class="btn btn-transparent">
+                                                <img src="btnpoll.png" width="20px" height="20px">
+                                            </button>
+                                            </label>
+                                            '.$data4['pollcontent'].'
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item bg-dark">
+                                        <div class="radio bg-dark">
+                                            <label>
+                                            <button type="submit" name="ch2" class="btn btn-transparent">
+                                                <img src="btnpoll.png" width="20px" height="20px">
+                                            </button>
+                                            </label>
+                                            '.$data5['pollcontent'].'
+                                        </div>
+                                    </li>
+                                    <input type="hidden" value ="'.$donnees['idFil'].'" name="idFil">
+                                </form>
+                            </ul>
+                        </div>';
+
+                }
+                
+            }        
+                    echo '</div>
+                    <form method = "POST">
+                        <div class="card-footer d-flex flex-row-reverse">
+                            
+                            <button type="submit" name="pubcom" class="btn btn-light col" style="background-color: transparent; border: none;">
+                                <img src="arrow.png" width="25px" height="25px" />
+                            </button>
+                            <input type="text" class="w-75 form-control" name="comment" id="message" rows="3" placeholder="Répondre">
+                            <input type="hidden" name="idFil" value="'.$donnees['idFil'].'">';
+
+                            if ( $data2['COUNT(*)'] > 0 ) {
+
+                                echo '<div class="h6 m-0 col">'.$data2['COUNT(*)'].'</div>';
+
+                            } else {
+
+                                echo '<div class="h6 m-0 col"></div>';
+
+                            }
+                            
+                            if ( $data3['COUNT(*)'] > 0 ) {
+
+                                echo '<button type="submit" name="like" class="btn btn-light" style="background-color: transparent; border: none;">
+                                        <img src="heart.png" width="25px" height="25px" />
+                                      </button>';
+
+                            } else {
+                                
+                                echo '<button type="submit" name="like" class="btn btn-light" style="background-color: transparent; border: none;">
+                                        <img src="noheart.png" width="25px" height="25px" />
+                                      </button>';
+
+                            }
+                      echo /*<a href="#" class="card-link"><i class="fa fa-mail-forward" name="share"></i> Partager</a>*/
+                        '</div>
+                    </form>';
+                
+                if ( $data['COUNT(*)'] > 0 ) {
+                    echo '<div class="list-group">
+                            <a href="#id'.$donnees['idFil'].'" onclick="return false" class="list-group-item bg-dark">Commentaires</a>
+                                <div class="list-group">';
+                }
+
+            
+            while ( $donnees2 = $reponse->fetch() ) {      ////////////////Fil d'actualité (AFFICHER COMMENTAIRES)////////////////
+
+                echo '<div class="geser gedf-card bg-dark text-white">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                        <img class="rounded-circle" width="30" height="30" src="'.photodeprofil( $db, $donnees2['idUtilisateur']).'" alt="">
+                                    </div>
+                                    <div class="ml-2">
+                                        <div class="h6 m-0">'.$donnees2['prenom'].' '.$donnees2['nom'].'</div>';
+
+                                        afficherrole ( verifrole ( $db, $donnees2['idUtilisateur'] ) );
+
+                                  echo '<div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>'.$donnees2['heureCom'].'</div>
+                                    </div>
+                                </div>';
+                                
+                                if ( $user == $donnees2['Utilisateur'] ) {
+                                
+                                    echo'<div class ="col col-lg-2"> 
+                                            <img src = "1077012.png"  width="25px" height="25px class="btn btn-light" style = "background-color: transparent; border: none;">
+                                        </div>';
+
+                                }
+
+                    echo '</div>
+                            <div class="card-body">
+                                <p class="komen">'.$donnees2['com'].'</p>
+                            </div>
+                        </div>
+                    </div>';
+            }
+            if ( $data['COUNT(*)'] > 0 ) {
+                echo '      </div>
+                        </div>';
+            }
+            echo '</div>';
+
+        }
+    }
 ?>
