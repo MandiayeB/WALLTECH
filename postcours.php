@@ -29,7 +29,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>walltech - Fil d'actualités</title>
+        <title>walltech - Cours</title>
         <link rel="stylesheet" href="bootstrap.min.css">
         <link rel="stylesheet" href="filactualites.css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -56,6 +56,8 @@
                             echo '<img class="rounded-circle" width="45" height="45" 
                             src="'.photodeprofil( $db, $_SESSION['idut']).'" alt="">';
                             ?>
+
+                            <div>&nbsp</div>
                             
                             <div class="h5"><?= $_SESSION['prenom'] ?> <?= $_SESSION['nom'] ?></div>
 
@@ -63,7 +65,6 @@
                                 afficherrole ( verifrole ( $db, $_SESSION['idut'] ) ); 
                             ?>
                             
-                            <div class="h7">Description du profil</div>
                         </div>
                         <!--<ul class="list-group list-group-flush">
                             <li class="list-group-item bg-dark text-white">

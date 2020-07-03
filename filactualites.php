@@ -130,20 +130,8 @@
                                 afficherrole ( verifrole ( $db, $_SESSION['idut'] ) ); 
                             ?>
                             
-                            <div class="h7">Description du profil</div>
                         </div>
-                        <span class="border border-secondary"></span>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item bg-dark text-white">
-                                <div class="h6 text-muted">Followers</div>
-                                <div class="h5">0</div>
-                            </li>
-                            <span class="border border-secondary"></span>
-                            <li class="list-group-item bg-dark text-white">
-                                <div class="h6 text-muted">Following</div>
-                                <div class="h5">0</div>
-                            </li>
-                        </ul>
+                        
                     </div>
                 </div>
 
@@ -227,7 +215,7 @@
                 <!-- Exemple de carte -->
 
                 
-                <div class="col-md-3">
+                <!--<div class="col-md-3">
                     <div class="card gedf-card bg-dark">
                         <div class="card-body bg-dark text-white">
                             <h5 class="card-title">Card title</h5>
@@ -238,7 +226,7 @@
                             <a href="#" class="card-link">Another link</a>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </body>

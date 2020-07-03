@@ -63,7 +63,7 @@
         
         $name_file = $filename;
         $tmp_name = $tmpname;
-        $local_image = "C:/xampp/htdocs/Walltech/images/";
+        $local_image = "C:/wamp64/www/walltech/images/";
         $chemin = "images/".$name_file;
         move_uploaded_file ( $tmp_name , $local_image.$name_file );
 
@@ -307,7 +307,7 @@
 
             $name_file = $filename;
             $tmp_name = $tmpname;
-            $local_image = "C:/xampp/htdocs/Walltech/images/";
+            $local_image = "C:/wamp64/www/walltech/images/";
             $chemin = "images/".$name_file;
             move_uploaded_file ( $tmp_name , $local_image.$name_file);
 
@@ -966,7 +966,7 @@
 
         $name_file = $filename;
         $tmp_name = $tmpname;
-        $local_image = "C:/xampp/htdocs/Walltech/images/";
+        $local_image = "C:/wamp64/www/walltech/images";
         $chemin = "images/".$name_file;
         move_uploaded_file ( $tmp_name , $local_image.$name_file);
 
@@ -1456,7 +1456,7 @@
 
             $name_file = $filename;
             $tmp_name = $tmpname;
-            $local_image = "C:/wampp/htdocs/Walltech/images/";
+            $local_image = "C:/wamp64/www/walltech/images";
             $chemin = "images/".$name_file;
             move_uploaded_file ( $tmp_name , $local_image.$name_file);
 
@@ -1691,4 +1691,505 @@
         return $lien;
     }
     
+    ////////////////////////////////////////////////////
+    ///////////  MAZE CREATION DE PARTIE  /////////////
+    //////////////////////////////////////////////////
+
+    function createmaze( $db, $user ) {
+
+        $requete = $db -> prepare( 'SELECT COUNT(*) FROM maze WHERE user = :user AND endgame = :endgame' );
+        $requete -> execute(array(
+            'user' => $user,
+            'endgame' => 0
+        ));
+        $data = $requete -> fetch();
+
+        if ( $data['COUNT(*)'] == 0 ) {
+
+            $req = $db -> prepare( 'INSERT INTO maze( user, ligne, colonne, nbcoups ) 
+            VALUES ( :user, :ligne, :colonne, :nbcoups )');
+
+            $req -> execute(array(
+                'user' => $user,
+                'ligne' => 2,
+                'colonne' => 0,
+                'nbcoups' => 0
+            ));
+
+        }
+
+    }
+
+    ////////////////////////////////////////////////////
+    /////////////     MAZE AFFICHAGE     //////////////
+    //////////////////////////////////////////////////
+
+    function affichermaze( $db, $user ) {
+
+        $req = $db -> prepare( 'SELECT * FROM maze WHERE user = :user ORDER BY idmaze DESC' );
+        $req -> execute( array( 'user' => $user ) );
+        while ( $data = $req -> fetch() ) { break; }
+
+        $artefact = 0;
+        for ( $i = 0; $i < 10; $i++ ) {
+
+            $nombre = $i + 1;
+            if ( $data['artefact'. $nombre .''] == 1 ) {
+                $artefact++;
+            }
+        }
+
+        for ( $i = 0; $i < 10; $i++ ) {
+
+            echo '<div class="row" style="flex-direction:row;">';
+
+            for ( $y = 0; $y < 10; $y++ ) {
+
+                if ( $data['ligne'] == $i AND $data['colonne'] == $y ) {
+
+                    echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                            <div style="height:10px;">&nbsp</div>
+                            <div>&nbsp&nbsp&nbsp<img height="65" width="65" src="desert.png" alt=""></div>
+                          </span>';
+
+                } else {
+
+                    $case = true;
+                    if ( $i == 9 AND $y == 0 AND $data['artefact8'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:15px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp<img height="55" width="55" src="amphora.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    } 
+
+                    if ( $i == 4 AND $y == 9 AND $artefact == 10 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:15px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp<img height="55" width="55" src="fleche.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i == 9 AND $y == 9 AND $data['artefact10'] == 0) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:15px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp&nbsp<img height="55" width="55" src="god.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    } 
+
+                    if ( $i == 6 AND $y == 5 AND $data['artefact7'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp&nbsp<img height="55" width="55" src="ankh.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i == 5 AND $y == 3 AND $data['artefact5'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp<img height="65" width="65" src="egyptian.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i == 0 AND $y == 7 AND $data['artefact3'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp<img height="55" width="55" src="scroll.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i == 3 AND $y == 2 AND $data['artefact4'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp<img height="55" width="55" src="snake.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i  == 5 AND $y == 8 AND $data['artefact6'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp&nbsp<img height="55" width="55" src="scarab.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+                    
+                    if ( $i == 1 AND $y == 0 AND $data['artefact1'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp<img height="55" width="55" src="woman.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i == 0 AND $y == 4 AND $data['artefact2'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp&nbsp<img height="55" width="55" src="pharaoh.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $i  == 9 AND $y == 5 AND $data['artefact9'] == 0 ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;">
+                                <div style="height:10px;">&nbsp</div>
+                                <div>&nbsp&nbsp&nbsp&nbsp<img height="55" width="55" src="dog.png" alt=""></div>
+                            </span>';
+                        $case = false;
+
+                    }
+
+                    if ( $case ) {
+
+                        echo '<span style="display:inline-block; height: 82px; width: 82px;"></span>';
+
+                    }
+                }
+
+            }
+
+            echo '</div>';
+            
+
+        }
+        echo '<span style="display:inline-block; height: 2px; width: 82px;"></span>';
+    }
+
+    ////////////////////////////////////////////////////
+    ///////////     MAZE DEPLACEMENTS     /////////////
+    //////////////////////////////////////////////////
+
+    function movemaze( $db, $move, $user ) {
+
+        $requete = $db -> prepare( 'SELECT * FROM maze WHERE user = :user ORDER BY idmaze DESC' );
+        $requete -> execute( array( 'user' => $user ) );
+        while ( $data = $requete -> fetch() ) { break; }
+        $result = false;
+
+        $artefact = 0;
+        for ( $i = 0; $i < 10; $i++ ) {
+
+            $nombre = $i + 1;
+            if ( $data['artefact'. $nombre .''] == 1 ) {
+                $artefact++;
+            }
+        }
+
+
+        if ( $move == 'up') {
+
+            $lig = -1;
+            $col = 0;
+            
+            $q = $db -> prepare( 'SELECT COUNT(*) FROM cases WHERE ligne = :ligne + :lig AND 
+            colonne = :colonne + :col AND upcase != 0' );
+            $q -> execute(array( 
+                'ligne' => $data['ligne'],
+                'lig' => $lig,
+                'colonne' => $data['colonne'],
+                'col' => $col
+         
+            ));
+            $donnees = $q -> fetch();
+
+        } else if ( $move == "down") {
+
+            $lig = 1;
+            $col = 0;
+
+            $q = $db -> prepare( 'SELECT COUNT(*) FROM cases WHERE ligne = :ligne + :lig AND 
+            colonne = :colonne + :col AND downcase != 0' );
+            $q -> execute(array( 
+                'ligne' => $data['ligne'],
+                'lig' => $lig,
+                'colonne' => $data['colonne'],
+                'col' => $col
+         
+            ));
+            $donnees = $q -> fetch();
+
+        } else if ( $move == "left") {
+
+            $lig = 0;
+            $col = -1;
+
+            $q = $db -> prepare( 'SELECT COUNT(*) FROM cases WHERE ligne = :ligne + :lig AND 
+            colonne = :colonne + :col AND leftcase != 0' );
+            $q -> execute(array( 
+                'ligne' => $data['ligne'],
+                'lig' => $lig,
+                'colonne' => $data['colonne'],
+                'col' => $col
+         
+            ));
+            $donnees = $q -> fetch();
+
+        } else if ( $move == "right") {
+
+            $lig = 0;
+            $col = 1;
+
+            $q = $db -> prepare( 'SELECT COUNT(*) FROM cases WHERE ligne = :ligne + :lig AND 
+            colonne = :colonne + :col AND rightcase != 0' );
+            $q -> execute(array( 
+                'ligne' => $data['ligne'],
+                'lig' => $lig,
+                'colonne' => $data['colonne'],
+                'col' => $col
+         
+            ));
+            $donnees = $q -> fetch();
+
+            if ( $data['ligne'] == 4 AND $data['colonne'] == 9 AND $artefact == 10 ) {
+                
+                endmaze( $db, $user );
+
+            }
+
+        }
+
+        if ( $donnees[ 'COUNT(*)' > 0 ] ) {
+
+            $result = true;
+
+        }
+
+        
+        if ( $result ) {
+
+            $req = $db -> prepare( 'UPDATE maze SET ligne = ligne + :lig, colonne = colonne + :col, 
+                nbcoups = nbcoups + 1 WHERE user = :user AND endgame = 0' );
+            $req -> execute(array( 
+                'lig' => $lig,
+                'col' => $col,
+                'user' => $user
+        
+            ));
+
+            $obj = $db -> prepare( 'SELECT * FROM maze WHERE user = :user ORDER BY idmaze DESC');
+            $obj -> execute(array( 'user' => $user ) );
+            while ( $data = $obj -> fetch() ) { break; }
+
+            if ( $data['ligne'] == 1 AND $data['colonne'] == 0 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact1 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+
+            } else if ( $data['ligne'] == 0 AND $data['colonne'] == 4 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact2 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 0 AND $data['colonne'] == 7 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact3 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 3 AND $data['colonne'] == 2 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact4 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 5 AND $data['colonne'] == 3 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact5 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 5 AND $data['colonne'] == 8 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact6 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 6 AND $data['colonne'] == 5 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact7 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 9 AND $data['colonne'] == 0 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact8 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 9 AND $data['colonne'] == 5 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact9 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            } else if ( $data['ligne'] == 9 AND $data['colonne'] == 9 ) {
+
+                $req = $db -> prepare( 'UPDATE maze SET artefact10 = 1 WHERE user = :user AND endgame = 0' );
+                $req -> execute( array( 'user' => $user ) );
+                
+            }
+
+        }
+
+    }
+
+    ////////////////////////////////////////////////////
+    ///////////////////  MAZE CARTE  //////////////////
+    //////////////////////////////////////////////////
+
+    function cardmaze( $db, $user ) {
+
+        $requete = $db -> prepare( 'SELECT * FROM maze WHERE user = :user ORDER BY idmaze DESC' );
+        $requete -> execute( array( 'user' => $user ) );
+        while ( $data = $requete -> fetch() ) { break; }
+
+        $artefact = 0;
+        for ( $i = 0; $i < 10; $i++ ) {
+
+            $nombre = $i + 1;
+            if ( $data['artefact'. $nombre .''] == 1 ) {
+                $artefact++;
+            }
+
+        }
+
+        if ( $artefact == 10 ) {
+            echo '<div class="container" style="background-image: url(maze2.png); 
+            background-size:99%; background-repeat: no-repeat; display:flex; flex-direction:column;">';
+        } else {
+            echo '<div class="container" style="background-image: url(maze1.png); 
+            background-size:99%; background-repeat: no-repeat; display:flex; flex-direction:column;">';
+        }
+    }
+
+    ////////////////////////////////////////////////////
+    ////////////////  MAZE INVENTAIRE  ////////////////
+    //////////////////////////////////////////////////
+
+    function inventairemaze( $db, $user ) {
+
+        $requete = $db -> prepare( 'SELECT * FROM maze WHERE user = :user AND endgame = :endgame' );
+        $requete -> execute(array(
+             'user' => $user,
+             'endgame' => 0
+        ));
+        $data = $requete -> fetch();
+
+        $req = $db -> prepare( 'SELECT COUNT(*) FROM maze WHERE user = :user AND endgame = :endgame' );
+        $req -> execute(array(
+             'user' => $user,
+             'endgame' => 1
+        ));
+        $donnees = $req -> fetch();
+
+        $image = array(
+            'nowoman.png',
+            'nopharaoh.png',
+            'noscroll.png',
+            'nosnake.png',
+            'noegyptian.png',
+            'noscarab.png',
+            'noankh.png',
+            'noamphora.png',
+            'nodog.png',
+            'nogod.png'
+        );
+
+        $frame = array(
+            'woman.png',
+            'pharaoh.png',
+            'scroll.png',
+            'snake.png',
+            'egyptian.png',
+            'scarab.png',
+            'ankh.png',
+            'amphora.png',
+            'dog.png',
+            'god.png'
+        );
+
+        echo '<div class="h5 row col">Nombre de coups : <div class="text-danger">&nbsp'.$data['nbcoups'].'</div></div>';
+        
+        if ( $donnees['COUNT(*)'] != 0 ) {
+
+            $req = $db -> prepare( 'SELECT * FROM maze WHERE user = :user AND endgame = 1 ORDER BY nbcoups' );
+            $req -> execute(array( 'user' => $user ));
+
+            while ( $result = $req -> fetch() ) { break; }
+            echo '<div class="h5 row col">Record personnel : <div style="color: #9933CC;">&nbsp'.$result['nbcoups'].'</div></div>';
+
+        }
+        $req = $db -> prepare( 'SELECT * FROM maze WHERE endgame = 1 ORDER BY nbcoups' );
+        $req -> execute(array( 'user' => $user ));
+        while ( $record = $req -> fetch() ) { break; }
+        echo '<div class="h5 row col">Record walltech : <div style="color: #007E33;">&nbsp'.$record['nbcoups'].'</div></div>';
+        echo '<div>&nbsp</div>';
+
+        for ( $i = 0; $i < 10; $i++ ) {
+
+            $nombre = $i + 1;
+            if ( $data['artefact'. $nombre .''] == 1 ) {
+
+                echo'<div class="h5"><img height="35" width="35" src="'.$frame[$i].'" alt="">&nbspX 1</div>';
+
+            } else {
+
+                echo'<div class="h5"><img height="35" width="35" src="'.$image[$i].'" alt="">&nbspX 0</div>';
+
+            }
+        }
+
+
+    }
+
+    ////////////////////////////////////////////////////
+    ///////////////////  MAZE FIN  ////////////////////
+    //////////////////////////////////////////////////
+
+    function endmaze( $db, $user ) {
+
+        $req = $db -> prepare( 'UPDATE maze SET endgame = 1 WHERE user = :user AND endgame = 0' );
+        $req -> execute( array( 'user' => $user ) );
+
+        header ( 'Location:endlabyrinthe.php' );
+
+    }
+
+    ////////////////////////////////////////////////////
+    ///////////////////  MAZE WIN  ////////////////////
+    //////////////////////////////////////////////////
+
+    function victoiremaze( $db, $user ) {
+
+        $requete = $db -> prepare( 'SELECT * FROM maze WHERE user = :user ORDER BY idmaze DESC' );
+        $requete -> execute( array( 'user' => $user ) );
+        while ( $data = $requete -> fetch() ) { break; }
+        
+        echo '<div class="row">
+                <div class="col-2"></div>
+                <img src="fortnite.png" height="180" width="400"/>
+              </div>
+              <div>&nbsp</div>';
+        echo '<div class="h5 text-white row col">Nombre de coups : <div class="text-danger">&nbsp'.$data['nbcoups'].'</div></div>';
+        echo '<div>&nbsp</div>';
+    }
 ?>

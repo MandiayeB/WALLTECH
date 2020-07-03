@@ -27,7 +27,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>walltech - Fil d'actualités</title>
+        <title>walltech - Cours</title>
         <link rel="stylesheet" href="bootstrap.min.css">
         <link rel="stylesheet" href="filactualites.css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -62,7 +62,6 @@
                                 afficherrole ( verifrole ( $db, $_SESSION['idut'] ) ); 
                             ?>
                             
-                            <div class="h7">Description du profil</div>
                         </div>
                     </div>
                 </div>
