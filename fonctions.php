@@ -1613,7 +1613,9 @@
     
     function cutvideo($video){
 
-        if(stristr($video, '?list')!== FALSE){
+
+    
+        if(stristr($video, '?list') !== FALSE){
 
             for($i=0; $i<strlen($video); $i++){
                 if($video[$i]=="/"){
@@ -1621,6 +1623,7 @@
                 }
                 
             }
+
             for($i=0;$i<strlen($list); $i++){
                 if(isset($list)){
                     if($list[$i]=="?"){
@@ -1633,7 +1636,7 @@
         }
 
         if (isset($lien)==FALSE){
-            for($i=0; $i<strlen($video) ;$i++){ 
+            for($i=0; $i<strlen($video); $i++){ 
             
                 if($video[$i]=="&"){ // Si la chaine de caractere a l'indice i est egal a "&"
                 $url = substr($video,0,-(strlen($video)-$i)); // on enleve i a la longueur de $url pour obtenir le nombre de caractere restant ( $url - $i = -result )

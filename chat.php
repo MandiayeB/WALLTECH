@@ -14,6 +14,7 @@
         postmessages( $db, $_POST['message'], $_SESSION['idut'], $_GET['idUt'] );
     
     }
+    
 ?>
 
 <!DOCTYPE html>
